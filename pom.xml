@@ -18,6 +18,8 @@
     <modules>
         <module>inventory</module>
         <module>product</module>
+        <module>order</module>
+        <module>feedback</module>
     </modules>
 
     <properties>

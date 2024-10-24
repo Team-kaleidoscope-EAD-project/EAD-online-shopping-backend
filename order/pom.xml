@@ -7,11 +7,11 @@
         <artifactId>Kaleidoscope</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
-    <groupId>com.kaleidoscope</groupId>
-    <artifactId>inventory</artifactId>
+    <groupId>org.kaleidoscope</groupId>
+    <artifactId>order</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>inventory</name>
-    <description>inventory</description>
+    <name>order</name>
+    <description>order</description>
     <url/>
     <licenses>
         <license/>
