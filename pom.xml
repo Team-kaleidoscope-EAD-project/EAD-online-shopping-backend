@@ -21,6 +21,7 @@
         <module>order</module>
         <module>feedback</module>
         <module>servicediscovery</module>
+        <module>apigateway</module>
     </modules>
 
     <properties>
