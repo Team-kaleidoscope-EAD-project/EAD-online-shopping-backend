@@ -7,11 +7,11 @@
         <artifactId>Kaleidoscope</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
-    <groupId>com.kaleidoscope</groupId>
-    <artifactId>inventory</artifactId>
+    <groupId>org.kaleidoscope</groupId>
+    <artifactId>feedback</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>inventory</name>
-    <description>inventory</description>
+    <name>feedback</name>
+    <description>feedback</description>
     <url/>
     <licenses>
         <license/>
@@ -31,13 +31,16 @@
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
+            <artifactId>spring-boot-starter</artifactId>
         </dependency>
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.cloud</groupId>
