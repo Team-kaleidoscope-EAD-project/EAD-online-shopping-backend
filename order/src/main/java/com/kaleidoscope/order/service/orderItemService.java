@@ -42,4 +42,9 @@ public class orderItemService {
         orderItemRepository.deleteById(ItemId);
         return "Order item deleted";
     }
+
+    public List<orderItemDto> getOrderItemsByOrderId(Integer orderId) {
+        List<orderItemModel> orderItemList = orderItemRepository.findByOrderId(orderId);
+        return modelMapper.map(orderItemList, new TypeToken<List<orderItemDto>>() {}.getType());
+    }
 }

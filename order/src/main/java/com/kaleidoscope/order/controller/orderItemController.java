@@ -8,7 +8,7 @@ import java.util.List;
 
 @RestController
 @CrossOrigin
-@RequestMapping(value = "api/v1/")
+@RequestMapping(value = "api/v1/order/")
 public class orderItemController {
     @Autowired
     private orderItemService orderItemService;
@@ -30,4 +30,10 @@ public class orderItemController {
     public String deleteOrderItem(@PathVariable Integer itemId) {
         return orderItemService.deleteOrderItem(itemId);
     }
+
+    @GetMapping("/getallorderitemsbyorderid/{orderId}")
+    public List<orderItemDto> getAllOrderItemsByOrderId(@PathVariable Integer orderId) {
+        return orderItemService.getOrderItemsByOrderId(orderId);
+    }
+
 }

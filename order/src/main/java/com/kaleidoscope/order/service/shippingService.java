@@ -1,5 +1,7 @@
 package com.kaleidoscope.order.service;
 
+import com.kaleidoscope.order.dto.paymentDto;
+import com.kaleidoscope.order.model.paymentModel;
 import com.kaleidoscope.order.repo.shippingRepo;
 import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
@@ -39,5 +41,10 @@ public class shippingService {
 //        shippingRepository.delete(modelMapper.map(shippingDto, shippingModel.class));
         shippingRepository.deleteById(ItemId);
         return "Shipping deleted";
+    }
+
+    public List<shippingDto> getShippingByOrderId(Integer orderId) {
+        List<shippingModel> shippingtList = shippingRepository.findByOrderId(orderId);
+        return modelMapper.map(shippingtList, new TypeToken<List<shippingDto>>() {}.getType());
     }
 }

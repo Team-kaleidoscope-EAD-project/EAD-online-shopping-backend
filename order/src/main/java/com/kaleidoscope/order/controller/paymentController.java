@@ -1,5 +1,6 @@
 package com.kaleidoscope.order.controller;
 
+import com.kaleidoscope.order.dto.orderItemDto;
 import com.kaleidoscope.order.dto.paymentDto;
 import com.kaleidoscope.order.service.paymentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,5 +32,10 @@ public class paymentController {
     @DeleteMapping("/deletepayment/{paymentId}")
     public String deletePayment(@PathVariable Integer paymentId) {
         return paymentServiceService.deletePatment(paymentId);
+    }
+
+    @GetMapping("/getpaymentbyorderid/{orderId}")
+    public List<paymentDto> getAllOrderItemsByOrderId(@PathVariable Integer orderId) {
+        return paymentServiceService.getPaymentByOrderId(orderId);
     }
 }
