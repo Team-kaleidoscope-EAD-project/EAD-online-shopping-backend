@@ -15,5 +15,5 @@ public class InventoryApplication {
 	@Bean
 	public ModelMapper modelMapper() {
 		return new ModelMapper();
-	}
+	}   
 }
