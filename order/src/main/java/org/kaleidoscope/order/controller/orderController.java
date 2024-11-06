@@ -1,9 +1,9 @@
-package com.kaleidoscope.order.controller;
+package org.kaleidoscope.order.controller;
 
-import com.kaleidoscope.order.service.orderService;
+import org.kaleidoscope.order.service.orderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import com.kaleidoscope.order.dto.orederDto;
+import org.kaleidoscope.order.dto.orederDto;
 import java.util.List;
 
 @RestController

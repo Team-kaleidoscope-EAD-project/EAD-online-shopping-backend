@@ -1,15 +1,13 @@
-package com.kaleidoscope.order.service;
+package org.kaleidoscope.order.service;
 
-import com.kaleidoscope.order.dto.orderItemDto;
-import com.kaleidoscope.order.model.orderItemModel;
-import com.kaleidoscope.order.repo.paymentRepo;
+import org.kaleidoscope.order.repo.paymentRepo;
 import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.kaleidoscope.order.dto.paymentDto;
-import com.kaleidoscope.order.model.paymentModel;
+import org.kaleidoscope.order.dto.paymentDto;
+import org.kaleidoscope.order.model.paymentModel;
 import java.util.List;
 
 @Service

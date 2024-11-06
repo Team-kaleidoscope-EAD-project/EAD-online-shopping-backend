@@ -1,8 +1,7 @@
-package com.kaleidoscope.order.controller;
+package org.kaleidoscope.order.controller;
 
-import com.kaleidoscope.order.dto.orderItemDto;
-import com.kaleidoscope.order.dto.paymentDto;
-import com.kaleidoscope.order.service.paymentService;
+import org.kaleidoscope.order.dto.paymentDto;
+import org.kaleidoscope.order.service.paymentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

@@ -1,4 +1,4 @@
-package com.kaleidoscope.order.model;
+package org.kaleidoscope.order.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;

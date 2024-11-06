@@ -1,4 +1,4 @@
-package com.kaleidoscope.order.dto;
+package org.kaleidoscope.order.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
