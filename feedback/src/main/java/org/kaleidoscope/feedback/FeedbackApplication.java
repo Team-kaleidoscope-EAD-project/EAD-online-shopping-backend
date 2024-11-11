@@ -1,14 +1,13 @@
-package com.kaleidoscope.product;
+package org.kaleidoscope.feedback;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class ProductApplication {
+public class FeedbackApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(ProductApplication.class, args);
-//        This is main application
+        SpringApplication.run(FeedbackApplication.class, args);
     }
 
 }
