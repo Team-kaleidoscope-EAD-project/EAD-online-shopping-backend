@@ -1,0 +1,130 @@
+version: '3.8'
+
+services:
+  # MySQL Order Service
+  mysql-order:
+    image: mysql
+    container_name: mysql_order
+    ports:
+      - "3307:3306"  # Expose MySQL Order service on port 3307
+    environment:
+      MYSQL_ROOT_PASSWORD: manoj22561
+      MYSQL_DATABASE: orderDb  # Database for order-related data
+    volumes:
+      - mysql_order_data:/var/lib/mysql  # Persist MySQL data in a volume
+    networks:
+      - app-network  # Attach to the app network
+    restart: always  # Restart the container if it stops
+
+  # MySQL Inventory Service
+  mysql-inventory:
+    image: mysql
+    container_name: mysql_inventory
+    ports:
+      - "3308:3306"  # Expose MySQL Inventory service on port 3308
+    environment:
+      MYSQL_ROOT_PASSWORD: manoj22561
+      MYSQL_DATABASE: inventoryDb  # Database for inventory-related data
+    restart: always  # Restart the container if it stops
+    volumes:
+      - mysql_inventory_data:/var/lib/mysql  # Persist MySQL data in a volume
+    networks:
+      - app-network  # Attach to the app network
+
+  # MongoDB Service for Product Data
+  mongo:
+    container_name: mongo
+    image: mongo:4.4.14-rc0-focal  # Use MongoDB version 4.4.14
+    ports:
+      - "27018:27017"  # Expose MongoDB service on port 27018
+    restart: always  # Restart the container if it stops
+    volumes:
+      - ./mongo-data:/data/db  # Persist MongoDB data in a volume
+    networks:
+      - app-network  # Attach to the app network
+
+  # Service Discovery (Eureka Server)
+  servicediscovery:
+    build:
+      context: ./servicediscovery  # Build service discovery from the specified directory
+    ports:
+      - "8761:8761"  # Expose Eureka server for external access
+    networks:
+      - app-network  # Attach to the app network
+
+  # API Gateway Service
+  apigateway:
+    build:
+      context: ./apigateway  # Build API Gateway from the specified directory
+    environment:
+      eureka.client.serviceUrl.defaultZone: http://servicediscovery:8761/eureka  # Eureka server URL
+    ports:
+      - "8080:8080"  # Expose API Gateway on port 8080
+    depends_on:
+      - servicediscovery  # Ensure Service Discovery is up before API Gateway
+    networks:
+      - app-network  # Attach to the app network
+
+  # Product Service
+  product:
+    build:
+      context: ./product  # Build product service from the specified directory
+    environment:
+      eureka.client.serviceUrl.defaultZone: http://servicediscovery:8761/eureka  # Eureka server URL
+      spring.data.mongodb.host: mongo  # MongoDB host for product service
+    depends_on:
+      - servicediscovery  # Ensure Service Discovery is up before Product Service
+      - mongo  # Ensure MongoDB is up before Product Service
+      - apigateway  # Ensure API Gateway is up before Product Service
+    networks:
+      - app-network  # Attach to the app network
+
+  # Order Service
+  order:
+    build:
+      context: ./order  # Build order service from the specified directory
+    environment:
+      - eureka.client.serviceUrl.defaultZone= http://servicediscovery:8761/eureka  # Eureka server URL
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-order:3306/orderDb  # MySQL Order DB URL
+    depends_on:
+      - servicediscovery  # Ensure Service Discovery is up before Order Service
+      - mysql-order  # Ensure MySQL Order DB is up before Order Service
+      - apigateway  # Ensure API Gateway is up before Order Service
+    networks:
+      - app-network  # Attach to the app network
+
+  # Inventory Service
+  inventory:
+    build:
+      context: ./inventory  # Build inventory service from the specified directory
+    environment:
+      - eureka.client.serviceUrl.defaultZone= http://servicediscovery:8761/eureka  # Eureka server URL
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql_inventory:3306/inventoryDb  # MySQL Inventory DB URL
+    depends_on:
+      - servicediscovery  # Ensure Service Discovery is up before Inventory Service
+      - apigateway  # Ensure API Gateway is up before Inventory Service
+      - mysql-inventory  # Ensure MySQL Inventory DB is up before Inventory Service
+    networks:
+      - app-network  # Attach to the app network
+
+  # Feedback Service
+  feedback:
+    build:
+      context: ./feedback  # Build feedback service from the specified directory
+    environment:
+      eureka.client.serviceUrl.defaultZone: http://servicediscovery:8761/eureka  # Eureka server URL
+    depends_on:
+      - servicediscovery  # Ensure Service Discovery is up before Feedback Service
+      - apigateway  # Ensure API Gateway is up before Feedback Service
+    networks:
+      - app-network  # Attach to the app network
+
+# Define persistent volumes for MySQL services
+volumes:
+  mysql_order_data:  # Volume for MySQL Order data
+  mysql_inventory_data:  # Volume for MySQL Inventory data
+
+# Define the app network for all services to communicate with each other
+networks:
+  app-network:
+    driver: bridge  # Use the bridge network driver for communication between containers
