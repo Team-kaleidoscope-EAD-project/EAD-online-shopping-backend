@@ -10,6 +10,7 @@
     <groupId>org.kaleidoscope</groupId>
     <artifactId>apigateway</artifactId>
     <version>0.0.1-SNAPSHOT</version>
+    <packaging>jar</packaging>
     <name>apigateway</name>
     <description>apigateway</description>
     <url/>
