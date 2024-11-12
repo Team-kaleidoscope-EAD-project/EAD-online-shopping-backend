@@ -20,10 +20,12 @@ public class paymentController {
     public List<paymentDto> getAllPayments() {
         return paymentServiceService.getAllPayments();
     }
+
     @PostMapping("/addpayment")
     public paymentDto addOrderItem(@RequestBody paymentDto paymentDto) {
         return paymentServiceService.addPayment(paymentDto);
     }
+
     @PutMapping("/updatepayment")
     public paymentDto updateOrderItem(@RequestBody paymentDto paymentDto) {
         return paymentServiceService.updatePayment(paymentDto);
@@ -31,7 +33,8 @@ public class paymentController {
 
     @DeleteMapping("/deletepayment/{paymentId}")
     public String deletePayment(@PathVariable Integer paymentId) {
-        return paymentServiceService.deletePatment(paymentId);
+
+        return paymentServiceService.deletePayment(paymentId);
     }
 
     @GetMapping("/getpaymentbyorderid/{orderId}")

@@ -15,4 +15,7 @@ public class shippingDto {
     private String shippingAddress;
     private int orderId;
     private LocalDate shippingDate;
+
+
+
 }
