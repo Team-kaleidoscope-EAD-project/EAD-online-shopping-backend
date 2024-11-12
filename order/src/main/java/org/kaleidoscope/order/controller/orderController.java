@@ -29,7 +29,7 @@ public class orderController {
         return orderService.updateOrder(orederDto);
     }
 
-    @DeleteMapping("/deletorder/{orderId}")
+    @DeleteMapping("/deleteorder/{orderId}")
     public String deleteOrder(@PathVariable Integer orderId) {
         return orderService.deleteOrder(orderId);
     }
