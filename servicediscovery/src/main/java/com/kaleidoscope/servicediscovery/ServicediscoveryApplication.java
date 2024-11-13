@@ -1,4 +1,4 @@
-package org.kaleidoscope.servicediscovery;
+package com.kaleidoscope.servicediscovery;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

@@ -1,10 +1,10 @@
-package org.kaleidoscope.feedback;
+package com.kaleidoscope.apigateway;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class FeedbackApplicationTests {
+class ApigatewayApplicationTests {
 
     @Test
     void contextLoads() {

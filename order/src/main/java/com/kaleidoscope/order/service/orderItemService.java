@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.kaleidoscope.order.dto.orderItemDto;
 import com.kaleidoscope.order.model.orderItemModel;
+
 import java.util.List;
 
 @Service
@@ -22,22 +23,23 @@ public class orderItemService {
     @Autowired
     private ModelMapper modelMapper;
 
-    public List<orderItemDto> getOrderItems(){
+    public List<orderItemDto> getOrderItems() {
         List<orderItemModel> orderItemList = orderItemRepository.findAll();
-        return modelMapper.map(orderItemList, new TypeToken<List<orderItemDto>>(){}.getType());
+        return modelMapper.map(orderItemList, new TypeToken<List<orderItemDto>>() {
+        }.getType());
     }
 
-    public orderItemDto addOrderItem(orderItemDto orderItemDto){
+    public orderItemDto addOrderItem(orderItemDto orderItemDto) {
         orderItemRepository.save(modelMapper.map(orderItemDto, orderItemModel.class));
         return orderItemDto;
     }
 
-    public orderItemDto updateOrderItem(orderItemDto orderItemDto){
+    public orderItemDto updateOrderItem(orderItemDto orderItemDto) {
         orderItemRepository.save(modelMapper.map(orderItemDto, orderItemModel.class));
         return orderItemDto;
     }
 
-    public String deleteOrderItem(Integer ItemId){
+    public String deleteOrderItem(Integer ItemId) {
 //        orderItemRepository.delete(modelMapper.map(orderItemDto, orderItemModel.class));
         orderItemRepository.deleteById(ItemId);
         return "Order item deleted";
@@ -45,6 +47,7 @@ public class orderItemService {
 
     public List<orderItemDto> getOrderItemsByOrderId(Integer orderId) {
         List<orderItemModel> orderItemList = orderItemRepository.findByOrderId(orderId);
-        return modelMapper.map(orderItemList, new TypeToken<List<orderItemDto>>() {}.getType());
+        return modelMapper.map(orderItemList, new TypeToken<List<orderItemDto>>() {
+        }.getType());
     }
 }

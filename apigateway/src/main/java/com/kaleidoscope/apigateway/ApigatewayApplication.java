@@ -1,4 +1,4 @@
-package org.kaleidoscope.apigateway;
+package com.kaleidoscope.apigateway;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

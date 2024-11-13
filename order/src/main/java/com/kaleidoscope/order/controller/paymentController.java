@@ -1,6 +1,5 @@
 package com.kaleidoscope.order.controller;
 
-import com.kaleidoscope.order.dto.orderItemDto;
 import com.kaleidoscope.order.dto.paymentDto;
 import com.kaleidoscope.order.service.paymentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,10 +19,12 @@ public class paymentController {
     public List<paymentDto> getAllPayments() {
         return paymentServiceService.getAllPayments();
     }
+
     @PostMapping("/addpayment")
     public paymentDto addOrderItem(@RequestBody paymentDto paymentDto) {
         return paymentServiceService.addPayment(paymentDto);
     }
+
     @PutMapping("/updatepayment")
     public paymentDto updateOrderItem(@RequestBody paymentDto paymentDto) {
         return paymentServiceService.updatePayment(paymentDto);

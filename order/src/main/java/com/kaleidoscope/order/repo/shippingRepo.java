@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface shippingRepo extends JpaRepository<shippingModel, Integer>{
+public interface shippingRepo extends JpaRepository<shippingModel, Integer> {
     List<shippingModel> findByOrderId(Integer orderId);
 }

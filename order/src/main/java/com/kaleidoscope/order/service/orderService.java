@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.kaleidoscope.order.dto.orederDto;
 import com.kaleidoscope.order.model.orderModel;
+
 import java.util.List;
 
 @Service
@@ -20,22 +21,23 @@ public class orderService {
     @Autowired
     private ModelMapper modelMapper;
 
-    public List<orederDto> getOrders(){
+    public List<orederDto> getOrders() {
         List<orderModel> orderList = orderrepo.findAll();
-        return modelMapper.map(orderList, new TypeToken<List<orederDto>>(){}.getType());
+        return modelMapper.map(orderList, new TypeToken<List<orederDto>>() {
+        }.getType());
     }
 
-    public orederDto addOrder(orederDto orederDto){
+    public orederDto addOrder(orederDto orederDto) {
         orderrepo.save(modelMapper.map(orederDto, orderModel.class));
         return orederDto;
     }
 
-    public orederDto updateOrder(orederDto orederDto){
+    public orederDto updateOrder(orederDto orederDto) {
         orderrepo.save(modelMapper.map(orederDto, orderModel.class));
         return orederDto;
     }
 
-    public String deleteOrder(Integer orderId){
+    public String deleteOrder(Integer orderId) {
 //        orderrepo.delete(modelMapper.map(orederDto, orderModel.class));
         orderrepo.deleteById(orderId);
         return "Order deleted";

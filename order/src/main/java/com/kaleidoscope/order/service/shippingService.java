@@ -1,7 +1,5 @@
 package com.kaleidoscope.order.service;
 
-import com.kaleidoscope.order.dto.paymentDto;
-import com.kaleidoscope.order.model.paymentModel;
 import com.kaleidoscope.order.repo.shippingRepo;
 import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
@@ -10,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.kaleidoscope.order.dto.shippingDto;
 import com.kaleidoscope.order.model.shippingModel;
+
 import java.util.List;
 
 @Service
@@ -22,22 +21,23 @@ public class shippingService {
     @Autowired
     private ModelMapper modelMapper;
 
-    public List<shippingDto> getAllShipping(){
+    public List<shippingDto> getAllShipping() {
         List<shippingModel> shippingList = shippingRepository.findAll();
-        return modelMapper.map(shippingList, new TypeToken<List<shippingDto>>(){}.getType());
+        return modelMapper.map(shippingList, new TypeToken<List<shippingDto>>() {
+        }.getType());
     }
 
-    public shippingDto addShipping(shippingDto shippingDto){
+    public shippingDto addShipping(shippingDto shippingDto) {
         shippingRepository.save(modelMapper.map(shippingDto, shippingModel.class));
         return shippingDto;
     }
 
-    public shippingDto updateShipping(shippingDto shippingDto){
+    public shippingDto updateShipping(shippingDto shippingDto) {
         shippingRepository.save(modelMapper.map(shippingDto, shippingModel.class));
         return shippingDto;
     }
 
-    public String deleteShipping(Integer ItemId){
+    public String deleteShipping(Integer ItemId) {
 //        shippingRepository.delete(modelMapper.map(shippingDto, shippingModel.class));
         shippingRepository.deleteById(ItemId);
         return "Shipping deleted";
@@ -45,6 +45,7 @@ public class shippingService {
 
     public List<shippingDto> getShippingByOrderId(Integer orderId) {
         List<shippingModel> shippingtList = shippingRepository.findByOrderId(orderId);
-        return modelMapper.map(shippingtList, new TypeToken<List<shippingDto>>() {}.getType());
+        return modelMapper.map(shippingtList, new TypeToken<List<shippingDto>>() {
+        }.getType());
     }
 }

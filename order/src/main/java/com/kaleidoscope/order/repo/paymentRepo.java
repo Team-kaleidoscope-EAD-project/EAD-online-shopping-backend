@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface paymentRepo extends JpaRepository<paymentModel, Integer>{
+public interface paymentRepo extends JpaRepository<paymentModel, Integer> {
     List<paymentModel> findByOrderId(Integer orderId);
 }
