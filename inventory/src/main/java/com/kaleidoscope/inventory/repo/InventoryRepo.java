@@ -1,6 +1,6 @@
 package com.kaleidoscope.inventory.repo;
 
-import org.kaleidoscope.inventory.model.InventoryItem;
+import com.kaleidoscope.inventory.model.InventoryItem;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

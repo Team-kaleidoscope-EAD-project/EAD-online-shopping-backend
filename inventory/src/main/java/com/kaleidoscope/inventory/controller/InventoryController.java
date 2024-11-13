@@ -1,7 +1,7 @@
 package com.kaleidoscope.inventory.controller;
 
-import org.kaleidoscope.inventory.dto.InventoryDTO;
-import org.kaleidoscope.inventory.service.InventoryService;
+import com.kaleidoscope.inventory.dto.InventoryDTO;
+import com.kaleidoscope.inventory.service.InventoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
