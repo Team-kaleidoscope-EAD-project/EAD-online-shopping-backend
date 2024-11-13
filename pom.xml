@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
-    <groupId>org.kaleidoscope</groupId>
+    <groupId>com.kaleidoscope</groupId>
     <artifactId>Kaleidoscope</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
