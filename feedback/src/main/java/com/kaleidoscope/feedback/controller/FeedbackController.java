@@ -9,8 +9,8 @@ import java.util.List;
 
 @RestController
 @CrossOrigin
-@RequestMapping(value = "api/v1/")
-public class getFeedbackController {
+@RequestMapping(value = "api/v1/feedback")
+public class FeedbackController {
     @Autowired
     private FeedbackService feedbackService;
 
@@ -23,4 +23,21 @@ public class getFeedbackController {
     public List<FeedbackDTO> getFeedbacks() {
         return feedbackService.getAllFeedbacks();
     }
+
+    @GetMapping("/getfeedback/{feedbackId}")
+    public FeedbackDTO findById(@PathVariable int feedbackId) {
+        return feedbackService.getOneFeedback(feedbackId);
+    }
+
+    @PutMapping("/updatefeedback")
+    public FeedbackDTO updateFeedback(@RequestBody FeedbackDTO feedbackDTO) {
+        return feedbackService.updateFeedback(feedbackDTO);
+    }
+
+    @DeleteMapping("/deletefeedback/{feedbackId}")
+    public String deleteFeedback(@PathVariable int feedbackId) {
+        return feedbackService.deleteFeedback(feedbackId);
+    }
+
+
 }
