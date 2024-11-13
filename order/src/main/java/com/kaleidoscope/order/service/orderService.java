@@ -31,8 +31,29 @@ public class orderService {
     }
 
     public orederDto updateOrder(orederDto orederDto){
-        orderrepo.save(modelMapper.map(orederDto, orderModel.class));
-        return orederDto;
+        if (orderrepo.existsById(orederDto.getId())) {
+            orderModel existingOrder = orderrepo.findById(orederDto.getId()).orElse(null);
+
+            if (existingOrder != null) {
+
+                existingOrder.setStatus(orederDto.getStatus());
+                existingOrder.setTotalAmount(orederDto.getTotalAmount());
+                existingOrder.setUserId(orederDto.getUserId());
+                existingOrder.setOrderDate(orederDto.getOrderDate());
+                existingOrder.setDiscountAmount(orederDto.getDiscountAmount());
+
+
+                orderrepo.save(existingOrder);
+
+
+                return modelMapper.map(existingOrder, orederDto.class);
+            }
+        }
+
+        // Throw an exception or handle the case where the order doesn't exist
+        throw new RuntimeException("Order not found with ID: " + orederDto.getId());
+
+
     }
 
     public String deleteOrder(Integer orderId){

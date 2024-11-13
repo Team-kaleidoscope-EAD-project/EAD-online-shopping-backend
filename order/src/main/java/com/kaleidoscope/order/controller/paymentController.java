@@ -32,13 +32,13 @@ public class paymentController {
     }
 
     @DeleteMapping("/deletepayment/{paymentId}")
-    public String deletePayment(@PathVariable Integer paymentId) {
+    public String deletePayment(@PathVariable("paymentId") Integer paymentId) {
 
         return paymentServiceService.deletePayment(paymentId);
     }
 
     @GetMapping("/getpaymentbyorderid/{orderId}")
-    public List<paymentDto> getAllOrderItemsByOrderId(@PathVariable Integer orderId) {
+    public List<paymentDto> getAllOrderItemsByOrderId(@PathVariable("orderId") Integer orderId) {
         return paymentServiceService.getPaymentByOrderId(orderId);
     }
 }

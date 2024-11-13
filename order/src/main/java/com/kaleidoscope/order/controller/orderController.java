@@ -19,15 +19,17 @@ public class orderController {
     }
     @PostMapping("/addorder")
     public orederDto addOrder(@RequestBody orederDto orederDto) {
+
         return orderService.addOrder(orederDto);
     }
     @PutMapping("/updateOrder")
     public orederDto updateOrder(@RequestBody orederDto orederDto) {
+
         return orderService.updateOrder(orederDto);
     }
 
-    @DeleteMapping("/deletorder/{orderId}")
-    public String deleteOrder(@PathVariable Integer orderId) {
+    @DeleteMapping("/deleteorder/{orderId}")
+    public String deleteOrder(@PathVariable("orderId") Integer orderId) {
         return orderService.deleteOrder(orderId);
     }
 
