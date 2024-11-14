@@ -59,7 +59,7 @@ services:
     environment:
       eureka.client.serviceUrl.defaultZone: http://servicediscovery:8761/eureka  # Eureka server URL
     ports:
-      - "8081:8080"  # Expose API Gateway on port 8080
+      - "8081:8081"  # Expose API Gateway on port 8080
     depends_on:
       - servicediscovery  # Ensure Service Discovery is up before API Gateway
     networks:
@@ -118,6 +118,20 @@ services:
       - apigateway  # Ensure API Gateway is up before Feedback Service
     networks:
       - app-network  # Attach to the app network
+
+  keycloak:
+    container_name: keycloak
+    image: quay.io/keycloak/keycloak:26.0.2
+    command: start-dev --import-realm
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./realms/:/opt/keycloak/data/import/
+    networks:
+      - app-network
 
 # Define persistent volumes for MySQL services
 volumes:
