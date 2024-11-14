@@ -1,4 +1,5 @@
 package com.kaleidoscope.order.dto;
+import com.kaleidoscope.order.model.orderModel;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,8 +13,10 @@ import java.time.LocalDate;
 
 public class orderItemDto {
     private int id;
-    private int orderId;
+    private int orderid;
     private Float price;
     private int quantity;
     private int productId;
+
+
 }

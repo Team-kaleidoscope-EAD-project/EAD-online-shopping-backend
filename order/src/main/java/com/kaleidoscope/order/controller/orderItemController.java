@@ -1,5 +1,6 @@
 package com.kaleidoscope.order.controller;
 
+import com.kaleidoscope.order.model.orderModel;
 import com.kaleidoscope.order.service.orderItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -30,13 +31,14 @@ public class orderItemController {
     }
 
     @DeleteMapping("/deletorderitem/{itemId}")
-    public String deleteOrderItem(@PathVariable Integer itemId) {
+    public String deleteOrderItem(@PathVariable("itemId") Integer itemId) {
+
         return orderItemService.deleteOrderItem(itemId);
     }
 
     @GetMapping("/getallorderitemsbyorderid/{orderId}")
-    public List<orderItemDto> getAllOrderItemsByOrderId(@PathVariable Integer orderId) {
-        return orderItemService.getOrderItemsByOrderId(orderId);
+    public List<orderItemDto> getAllOrderItemsByOrderId(@PathVariable("orderId") Integer orderId) {
+        return orderItemService.getOrderItemsByOrderModel(orderId);
     }
 
 }
