@@ -16,6 +16,8 @@ services:
       - app-network  # Attach to the app network
     restart: always  # Restart the container if it stops
 
+
+
   # MySQL Inventory Service
   mysql-inventory:
     image: mysql
@@ -31,6 +33,7 @@ services:
     networks:
       - app-network  # Attach to the app network
 
+
   # MongoDB Service for Product Data
   mongo:
     container_name: mongo
@@ -42,6 +45,7 @@ services:
       - ./mongo-data:/data/db  # Persist MongoDB data in a volume
     networks:
       - app-network  # Attach to the app network
+
 
   # Service Discovery (Eureka Server)
   servicediscovery:
@@ -65,6 +69,7 @@ services:
     networks:
       - app-network  # Attach to the app network
 
+
   # Product Service
   product:
     build:
@@ -78,6 +83,8 @@ services:
       - apigateway  # Ensure API Gateway is up before Product Service
     networks:
       - app-network  # Attach to the app network
+    deploy:
+      replicas: 3  # Scale to 3 instances
 
   # Order Service
   order:
@@ -92,6 +99,8 @@ services:
       - apigateway  # Ensure API Gateway is up before Order Service
     networks:
       - app-network  # Attach to the app network
+    deploy:
+      replicas: 3  # Scale to 3 instances
 
   # Inventory Service
   inventory:
@@ -106,6 +115,8 @@ services:
       - mysql-inventory  # Ensure MySQL Inventory DB is up before Inventory Service
     networks:
       - app-network  # Attach to the app network
+    deploy:
+      replicas: 3  # Scale to 3 instances
 
   # Feedback Service
   feedback:
@@ -118,6 +129,8 @@ services:
       - apigateway  # Ensure API Gateway is up before Feedback Service
     networks:
       - app-network  # Attach to the app network
+    deploy:
+      replicas: 3  # Scale to 3 instances
 
 # Define persistent volumes for MySQL services
 volumes:
