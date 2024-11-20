@@ -19,9 +19,11 @@ public class orderItemController {
         return orderItemService.getOrderItems();
     }
 
-    @PostMapping("/addorderitem")
-    public orderItemDto addOrderItem(@RequestBody orderItemDto orderItemDto) {
-        return orderItemService.addOrderItem(orderItemDto);
+
+
+    @PostMapping("/addorderitems")
+    public List<orderItemDto> addOrderItems(@RequestBody List<orderItemDto> orderItemDtos) {
+        return orderItemService.addOrderItems(orderItemDtos);
     }
 
     @PutMapping("/updateorderitem")

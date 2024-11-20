@@ -58,6 +58,13 @@ public class orderItemService {
         );
     }
 
+    public List<orderItemDto> addOrderItems(List<orderItemDto> orderItemDtos) {
+        // Iterate through each order item DTO, add it to the database, and collect the saved items
+        return orderItemDtos.stream()
+                .map(this::addOrderItem) // Reuse the existing addOrderItem method
+                .collect(Collectors.toList());
+    }
+
     public orderItemDto updateOrderItem(orderItemDto orderItemDto){
         orderItemModel existingOrderItem = orderItemRepository.findById(orderItemDto.getId())
                 .orElseThrow(() -> new RuntimeException("Order item not found with ID: " + orderItemDto.getId()));
