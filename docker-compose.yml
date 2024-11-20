@@ -33,6 +33,21 @@ services:
     networks:
       - app-network  # Attach to the app network
 
+  # MySQL feedback Service
+  mysql-feedback:
+    image: mysql
+    container_name: mysql_feedback
+    ports:
+      - "3309:3306" # Expose MySQL feedback service on port 3309
+    environment:
+      MYSQL_ROOT_PASSWORD: manoj22561
+      MYSQL_DATABASE: feedbackDb # Database for feedback-related data
+    restart: always # Restart the container if it stops
+    volumes:
+      - mysql_feedback_data:/var/lib/mysql # Persist MySQL data in a volume
+    networks:
+      - app-network  # Attach to the app network
+
 
   # MongoDB Service for Product Data
   mongo:
@@ -77,6 +92,7 @@ services:
     environment:
       eureka.client.serviceUrl.defaultZone: http://servicediscovery:8761/eureka # Eureka server URL
       spring.data.mongodb.host: mongo # MongoDB host for product service
+
     depends_on:
       - servicediscovery # Ensure Service Discovery is up before Product Service
       - mongo # Ensure MongoDB is up before Product Service
@@ -93,6 +109,9 @@ services:
     environment:
       - eureka.client.serviceUrl.defaultZone= http://servicediscovery:8761/eureka # Eureka server URL
       - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-order:3306/orderDb # MySQL Order DB URL
+      - spring.datasource.username=root
+      - spring.datasource.password=manoj22561
+      - spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
     depends_on:
       - servicediscovery # Ensure Service Discovery is up before Order Service
       - mysql-order # Ensure MySQL Order DB is up before Order Service
@@ -109,6 +128,9 @@ services:
     environment:
       - eureka.client.serviceUrl.defaultZone= http://servicediscovery:8761/eureka # Eureka server URL
       - SPRING_DATASOURCE_URL=jdbc:mysql://mysql_inventory:3306/inventoryDb # MySQL Inventory DB URL
+      - spring.datasource.username=root
+      - spring.datasource.password=manoj22561
+      - spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
     depends_on:
       - servicediscovery # Ensure Service Discovery is up before Inventory Service
       - apigateway # Ensure API Gateway is up before Inventory Service
@@ -123,10 +145,15 @@ services:
     build:
       context: ./feedback # Build feedback service from the specified directory
     environment:
-      eureka.client.serviceUrl.defaultZone: http://servicediscovery:8761/eureka # Eureka server URL
+      - eureka.client.serviceUrl.defaultZone= http://servicediscovery:8761/eureka # Eureka server URL
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql_feedback:3306/feedbackDb # MySQL Feedback DB URL
+      - spring.datasource.username=root
+      - spring.datasource.password=manoj22561
+      - spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
     depends_on:
       - servicediscovery # Ensure Service Discovery is up before Feedback Service
       - apigateway # Ensure API Gateway is up before Feedback Service
+      - mysql-feedback
     networks:
       - app-network  # Attach to the app network
     deploy:
@@ -136,6 +163,7 @@ services:
 volumes:
   mysql_order_data: # Volume for MySQL Order data
   mysql_inventory_data: # Volume for MySQL Inventory data
+  mysql_feedback_data: # Volume for MySQL feedback data
 
 # Define the app network for all services to communicate with each other
 networks:
