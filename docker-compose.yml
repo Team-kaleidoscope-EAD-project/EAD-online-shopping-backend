@@ -13,8 +13,10 @@ services:
     volumes:
       - mysql_order_data:/var/lib/mysql # Persist MySQL data in a volume
     networks:
-      - app-network # Attach to the app network
-    restart: always # Restart the container if it stops
+      - app-network  # Attach to the app network
+    restart: always  # Restart the container if it stops
+
+
 
   # MySQL Inventory Service
   mysql-inventory:
@@ -29,7 +31,8 @@ services:
     volumes:
       - mysql_inventory_data:/var/lib/mysql # Persist MySQL data in a volume
     networks:
-      - app-network # Attach to the app network
+      - app-network  # Attach to the app network
+
 
   # MongoDB Service for Product Data
   mongo:
@@ -41,7 +44,8 @@ services:
     volumes:
       - ./mongo-data:/data/db # Persist MongoDB data in a volume
     networks:
-      - app-network # Attach to the app network
+      - app-network  # Attach to the app network
+
 
   # Service Discovery (Eureka Server)
   servicediscovery:
@@ -63,7 +67,8 @@ services:
     depends_on:
       - servicediscovery # Ensure Service Discovery is up before API Gateway
     networks:
-      - app-network # Attach to the app network
+      - app-network  # Attach to the app network
+
 
   # Product Service
   product:
@@ -77,7 +82,9 @@ services:
       - mongo # Ensure MongoDB is up before Product Service
       - apigateway # Ensure API Gateway is up before Product Service
     networks:
-      - app-network # Attach to the app network
+      - app-network  # Attach to the app network
+    deploy:
+      replicas: 1  # Scale to 3 instances
 
   # Order Service
   order:
@@ -91,7 +98,9 @@ services:
       - mysql-order # Ensure MySQL Order DB is up before Order Service
       - apigateway # Ensure API Gateway is up before Order Service
     networks:
-      - app-network # Attach to the app network
+      - app-network  # Attach to the app network
+    deploy:
+      replicas: 1  # Scale to 3 instances
 
   # Inventory Service
   inventory:
@@ -105,7 +114,9 @@ services:
       - apigateway # Ensure API Gateway is up before Inventory Service
       - mysql-inventory # Ensure MySQL Inventory DB is up before Inventory Service
     networks:
-      - app-network # Attach to the app network
+      - app-network  # Attach to the app network
+    deploy:
+      replicas: 1  # Scale to 3 instances
 
   # Feedback Service
   feedback:
@@ -117,7 +128,9 @@ services:
       - servicediscovery # Ensure Service Discovery is up before Feedback Service
       - apigateway # Ensure API Gateway is up before Feedback Service
     networks:
-      - app-network # Attach to the app network
+      - app-network  # Attach to the app network
+    deploy:
+      replicas: 1  # Scale to 3 instances
 
 # Define persistent volumes for MySQL services
 volumes:
