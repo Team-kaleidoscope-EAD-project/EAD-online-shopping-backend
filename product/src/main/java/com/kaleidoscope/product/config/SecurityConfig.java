@@ -1,5 +1,6 @@
-package com.kaleidoscope.apigateway.config;
+package com.kaleidoscope.product.config;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,7 +13,6 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.security.oauth2.server.resource.authentication.ReactiveJwtAuthenticationConverterAdapter;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.web.reactive.config.WebFluxConfigurer;
-import lombok.extern.slf4j.Slf4j;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -32,8 +32,7 @@ public class SecurityConfig implements WebFluxConfigurer {
         http
                 .csrf(ServerHttpSecurity.CsrfSpec::disable) // Disable CSRF if not required
                 .authorizeExchange(exchanges -> exchanges
-                        .pathMatchers("/api/v1/inventory/getinventoryitems").hasRole("kalei_ADMIN")
-                                .pathMatchers("api/v1/feedback/public").hasRole("kalei_ADMIN")
+                        .pathMatchers("/api/v1/inventory/getinventoryitems").permitAll()
 //                        .pathMatchers(AUTH_WHITELIST).permitAll()
 //                        .pathMatchers("/api/auth/**", "/api/user/**").permitAll()
 //                        .pathMatchers(HttpMethod.GET, "/api/v1/product", "/api/v1/product/{productId}", "/api/v1/product/categories", "/api/v1/product/search").permitAll()
