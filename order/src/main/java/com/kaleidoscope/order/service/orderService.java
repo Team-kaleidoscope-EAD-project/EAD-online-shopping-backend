@@ -12,7 +12,6 @@ import java.util.List;
 
 @Service
 @Transactional
-
 public class orderService {
     @Autowired
     private orderRepo orderrepo;
@@ -26,8 +25,13 @@ public class orderService {
     }
 
     public orederDto addOrder(orederDto orederDto){
-        orderrepo.save(modelMapper.map(orederDto, orderModel.class));
-        return orederDto;
+        System.out.println(orederDto);
+        orderModel orderModel = modelMapper.map(orederDto, orderModel.class);
+
+        orderModel savedOrder = orderrepo.saveAndFlush(orderModel);
+
+        return modelMapper.map(savedOrder, orederDto.class);
+
     }
 
     public orederDto updateOrder(orederDto orederDto){
