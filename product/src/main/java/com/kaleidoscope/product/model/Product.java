@@ -4,6 +4,7 @@ import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+
 import java.util.List;
 
 @Data
@@ -15,6 +16,7 @@ public class Product {
     private String description;
     private String category;
     private double price;
+
     private String imageUrl;
     private List<Variant> variants;
 
@@ -29,4 +31,5 @@ public class Product {
         private String size;
         private String sku;  // SKU is a string
     }
+
 }

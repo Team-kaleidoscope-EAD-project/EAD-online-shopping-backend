@@ -1,6 +1,8 @@
 package com.kaleidoscope.product.service;
 
+
 import com.kaleidoscope.product.dto.ProductVariantDTO;
+
 import com.kaleidoscope.product.model.Product;
 import com.kaleidoscope.product.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +10,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+
 import java.util.UUID;
+
 
 @Service
 public class ProductService {
@@ -16,15 +20,19 @@ public class ProductService {
     @Autowired
     private ProductRepository productRepository;
 
+
     // Retrieve all products
+
     public List<Product> getAllProducts() {
         return productRepository.findAll();
     }
+
 
     // Retrieve a product by ID
     public Optional<Product> getProductById(String id) {
         return productRepository.findById(id);
     }
+
 
 
     // Create a new product
@@ -58,6 +66,7 @@ public class ProductService {
             product.setDescription(updatedProduct.getDescription());
             product.setCategory(updatedProduct.getCategory());
             product.setPrice(updatedProduct.getPrice());
+
             product.setImageUrl(updatedProduct.getImageUrl());
             return productRepository.save(product);
         }).orElseThrow(() -> new RuntimeException("Product not found"));
@@ -89,3 +98,4 @@ public class ProductService {
                 )
                 .findFirst();
     }}
+

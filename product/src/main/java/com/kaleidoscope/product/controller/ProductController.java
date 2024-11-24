@@ -1,10 +1,12 @@
 package com.kaleidoscope.product.controller;
 
+
 import com.kaleidoscope.product.dto.ProductVariantDTO;
 import com.kaleidoscope.product.model.Product;
 import com.kaleidoscope.product.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,18 +14,22 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/products")
+
+@RequestMapping("/api/v1/product")
+
 public class ProductController {
 
     @Autowired
     private ProductService productService;
 
-    // GET /api/products - Retrieve all products
-    @GetMapping
+
+    @GetMapping("/")
+
     public ResponseEntity<List<Product>> getAllProducts() {
         List<Product> products = productService.getAllProducts();
         return ResponseEntity.ok(products);
     }
+
 
     // GET /api/products/{id} - Retrieve a product by ID
     @GetMapping("/{id}")
@@ -52,11 +58,13 @@ public class ProductController {
     }
 
     // DELETE /api/products/{id} - Delete a product by ID
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable String id) {
         productService.deleteProduct(id);
         return ResponseEntity.noContent().build();
     }
+
 
     // GET /api/products/category/{category} - Retrieve products by category
     @GetMapping("/sku/{sku}")
@@ -64,4 +72,5 @@ public class ProductController {
         Optional<ProductVariantDTO> productVariant = productService.getProductBySku(sku);
         return productVariant.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
+
 }
