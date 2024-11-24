@@ -2,6 +2,7 @@ package com.kaleidoscope.inventory.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import java.time.LocalDateTime;
 
 @Entity
 @NoArgsConstructor
@@ -11,19 +12,13 @@ import lombok.*;
 @Data
 public class InventoryItem {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int inventoryItemId;
-
-    @Column(nullable = false)
-    private int productId;
-
-    @Column(nullable = false)
-    private String color;
-
-    @Column(nullable = false)
-    private String size;
+    @Column(nullable = false, unique = true, length = 16)
+    private String sku;
 
     @Column(nullable = false)
     private Integer quantity;
+
+    @Column(nullable = false)
+    private LocalDateTime lastRestockedAt;
 }
 
