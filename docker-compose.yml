@@ -61,6 +61,24 @@ services:
     networks:
       - app-network  # Attach to the app network
 
+    networks:
+      - app-network  # Attach to the app network
+
+  postgres-keycloak:
+    image: postgres:15
+    container_name: postgres_keycloak
+    ports:
+      - "3610:5432"
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: keycloak
+      POSTGRES_PASSWORD: keycloakpassword
+    volumes:
+      - postgres_keycloak_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+   
+
 
   # Service Discovery (Eureka Server)
   servicediscovery:
@@ -76,11 +94,15 @@ services:
     build:
       context: ./apigateway # Build API Gateway from the specified directory
     environment:
-      eureka.client.serviceUrl.defaultZone: http://servicediscovery:8761/eureka # Eureka server URL
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://servicediscovery:8761/eureka
+      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI: http://keycloak:9090/realms/kaleidoscope-microservice-realm/protocol/openid-connect/certs
+      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSURER_URI: http://keycloak:9090/realms/kaleidoscope-microservice-realm
+
     ports:
       - "8080:8080" # Expose API Gateway on port 8080
     depends_on:
-      - servicediscovery # Ensure Service Discovery is up before API Gateway
+      - servicediscovery  # Ensure Service Discovery is up before API Gateway
+      - keycloak
     networks:
       - app-network  # Attach to the app network
 
@@ -90,13 +112,15 @@ services:
     build:
       context: ./product # Build product service from the specified directory
     environment:
-      eureka.client.serviceUrl.defaultZone: http://servicediscovery:8761/eureka # Eureka server URL
-      spring.data.mongodb.host: mongo # MongoDB host for product service
-
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://servicediscovery:8761/eureka
+      SPRING_DATA_MONGODB_HOST: mongo
+      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI: http://keycloak:9090/realms/kaleidoscope-microservice-realm/protocol/openid-connect/certs
+      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSURER_URI: http://keycloak:9090/realms/kaleidoscope-microservice-realm
     depends_on:
-      - servicediscovery # Ensure Service Discovery is up before Product Service
-      - mongo # Ensure MongoDB is up before Product Service
-      - apigateway # Ensure API Gateway is up before Product Service
+      - servicediscovery  # Ensure Service Discovery is up before Product Service
+      - mongo  # Ensure MongoDB is up before Product Service
+      - apigateway  # Ensure API Gateway is up before Product Service
+      - keycloak
     networks:
       - app-network  # Attach to the app network
     deploy:
@@ -107,15 +131,19 @@ services:
     build:
       context: ./order # Build order service from the specified directory
     environment:
-      - eureka.client.serviceUrl.defaultZone= http://servicediscovery:8761/eureka # Eureka server URL
-      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-order:3306/orderDb # MySQL Order DB URL
+
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://servicediscovery:8761/eureka
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-order:3306/orderDb  # MySQL Order DB URL
+      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI: http://keycloak:9090/realms/kaleidoscope-microservice-realm/protocol/openid-connect/certs
+      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSURER_URI: http://keycloak:9090/realms/kaleidoscope-microservice-realm
       - spring.datasource.username=root
       - spring.datasource.password=manoj22561
       - spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
     depends_on:
-      - servicediscovery # Ensure Service Discovery is up before Order Service
-      - mysql-order # Ensure MySQL Order DB is up before Order Service
-      - apigateway # Ensure API Gateway is up before Order Service
+      - servicediscovery  # Ensure Service Discovery is up before Order Service
+      - mysql-order  # Ensure MySQL Order DB is up before Order Service
+      - apigateway  # Ensure API Gateway is up before Order Service
+      - keycloak
     networks:
       - app-network  # Attach to the app network
     deploy:
@@ -126,15 +154,18 @@ services:
     build:
       context: ./inventory # Build inventory service from the specified directory
     environment:
-      - eureka.client.serviceUrl.defaultZone= http://servicediscovery:8761/eureka # Eureka server URL
-      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql_inventory:3306/inventoryDb # MySQL Inventory DB URL
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://servicediscovery:8761/eureka
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql_inventory:3306/inventoryDb  # MySQL Inventory DB URL
+      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI: http://keycloak:9090/realms/kaleidoscope-microservice-realm/protocol/openid-connect/certs
+      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSURER_URI: http://keycloak:9090/realms/kaleidoscope-microservice-realm
       - spring.datasource.username=root
       - spring.datasource.password=manoj22561
       - spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
     depends_on:
-      - servicediscovery # Ensure Service Discovery is up before Inventory Service
-      - apigateway # Ensure API Gateway is up before Inventory Service
-      - mysql-inventory # Ensure MySQL Inventory DB is up before Inventory Service
+      - servicediscovery  # Ensure Service Discovery is up before Inventory Service
+      - apigateway  # Ensure API Gateway is up before Inventory Service
+      - mysql-inventory  # Ensure MySQL Inventory DB is up before Inventory Service
+      - keycloak
     networks:
       - app-network  # Attach to the app network
     deploy:
@@ -145,25 +176,51 @@ services:
     build:
       context: ./feedback # Build feedback service from the specified directory
     environment:
-      - eureka.client.serviceUrl.defaultZone= http://servicediscovery:8761/eureka # Eureka server URL
-      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql_feedback:3306/feedbackDb # MySQL Feedback DB URL
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://servicediscovery:8761/eureka
+#      SPRING_DATASOURCE_URL: jdbc:mysql://mysql_inventory:3306/inventoryDb  # MySQL Inventory DB URL
+      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI: http://keycloak:9090/realms/kaleidoscope-microservice-realm/protocol/openid-connect/certs
+      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSURER_URI: http://keycloak:9090/realms/kaleidoscope-microservice-realm
       - spring.datasource.username=root
       - spring.datasource.password=manoj22561
       - spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
     depends_on:
-      - servicediscovery # Ensure Service Discovery is up before Feedback Service
-      - apigateway # Ensure API Gateway is up before Feedback Service
+      - servicediscovery  # Ensure Service Discovery is up before Feedback Service
+      - apigateway  # Ensure API Gateway is up before Feedback Service
+      - keycloak
       - mysql-feedback
     networks:
       - app-network  # Attach to the app network
     deploy:
       replicas: 1  # Scale to 3 instances
 
+  keycloak:
+    container_name: keycloak
+    image: quay.io/keycloak/keycloak:26.0.2
+    command: >
+      start-dev
+    environment:
+      KC_DB: postgres
+      KC_DB_URL_HOST: postgres-keycloak
+      KC_DB_URL_PORT: 5432
+      KC_DB_USERNAME: keycloak
+      KC_DB_PASSWORD: keycloakpassword
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_HTTP_PORT: 9090  # Set the desired port (e.g., 9090)
+    ports:
+      - "9090:9090"
+    depends_on:
+      - postgres-keycloak
+    networks:
+      - app-network
+
 # Define persistent volumes for MySQL services
 volumes:
-  mysql_order_data: # Volume for MySQL Order data
-  mysql_inventory_data: # Volume for MySQL Inventory data
-  mysql_feedback_data: # Volume for MySQL feedback data
+  mysql_order_data:  # Volume for MySQL Order data
+  mysql_inventory_data:  # Volume for MySQL Inventory data
+  postgres_keycloak_data:
+  mongo_product_data:
+
 
 # Define the app network for all services to communicate with each other
 networks:
