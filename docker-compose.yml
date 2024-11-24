@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   # MySQL Order Service
@@ -6,40 +6,61 @@ services:
     image: mysql
     container_name: mysql_order
     ports:
-      - "3307:3306"  # Expose MySQL Order service on port 3307
+      - "3307:3306" # Expose MySQL Order service on port 3307
     environment:
       MYSQL_ROOT_PASSWORD: manoj22561
-      MYSQL_DATABASE: orderDb  # Database for order-related data
+      MYSQL_DATABASE: orderDb # Database for order-related data
     volumes:
-      - mysql_order_data:/var/lib/mysql  # Persist MySQL data in a volume
+      - mysql_order_data:/var/lib/mysql # Persist MySQL data in a volume
     networks:
       - app-network  # Attach to the app network
     restart: always  # Restart the container if it stops
+
+
 
   # MySQL Inventory Service
   mysql-inventory:
     image: mysql
     container_name: mysql_inventory
     ports:
-      - "3308:3306"  # Expose MySQL Inventory service on port 3308
+      - "3308:3306" # Expose MySQL Inventory service on port 3308
     environment:
       MYSQL_ROOT_PASSWORD: manoj22561
-      MYSQL_DATABASE: inventoryDb  # Database for inventory-related data
-    restart: always  # Restart the container if it stops
+      MYSQL_DATABASE: inventoryDb # Database for inventory-related data
+    restart: always # Restart the container if it stops
     volumes:
-      - mysql_inventory_data:/var/lib/mysql  # Persist MySQL data in a volume
+      - mysql_inventory_data:/var/lib/mysql # Persist MySQL data in a volume
     networks:
       - app-network  # Attach to the app network
+
+  # MySQL feedback Service
+  mysql-feedback:
+    image: mysql
+    container_name: mysql_feedback
+    ports:
+      - "3309:3306" # Expose MySQL feedback service on port 3309
+    environment:
+      MYSQL_ROOT_PASSWORD: manoj22561
+      MYSQL_DATABASE: feedbackDb # Database for feedback-related data
+    restart: always # Restart the container if it stops
+    volumes:
+      - mysql_feedback_data:/var/lib/mysql # Persist MySQL data in a volume
+    networks:
+      - app-network  # Attach to the app network
+
 
   # MongoDB Service for Product Data
   mongo:
     container_name: mongo
-    image: mongo:4.4.14-rc0-focal  # Use MongoDB version 4.4.14
+    image: mongo:4.4.14-rc0-focal # Use MongoDB version 4.4.14
     ports:
-      - "27018:27017"  # Expose MongoDB service on port 27018
-    restart: always  # Restart the container if it stops
+      - "27018:27017" # Expose MongoDB service on port 27018
+    restart: always # Restart the container if it stops
     volumes:
-      - mongo_product_data:/data/db  # Persist MongoDB data in a volume
+      - ./mongo-data:/data/db # Persist MongoDB data in a volume
+    networks:
+      - app-network  # Attach to the app network
+
     networks:
       - app-network  # Attach to the app network
 
@@ -56,36 +77,40 @@ services:
       - postgres_keycloak_data:/var/lib/postgresql/data
     networks:
       - app-network
+   
+
 
   # Service Discovery (Eureka Server)
   servicediscovery:
     build:
-      context: ./servicediscovery  # Build service discovery from the specified directory
+      context: ./servicediscovery # Build service discovery from the specified directory
     ports:
-      - "8761:8761"  # Expose Eureka server for external access
+      - "8761:8761" # Expose Eureka server for external access
     networks:
-      - app-network  # Attach to the app network
+      - app-network # Attach to the app network
 
   # API Gateway Service
   apigateway:
     build:
-      context: ./apigateway  # Build API Gateway from the specified directory
+      context: ./apigateway # Build API Gateway from the specified directory
     environment:
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://servicediscovery:8761/eureka
       SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI: http://keycloak:9090/realms/kaleidoscope-microservice-realm/protocol/openid-connect/certs
       SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSURER_URI: http://keycloak:9090/realms/kaleidoscope-microservice-realm
+
     ports:
-      - "8080:8080"  # Expose API Gateway on port 8080
+      - "8080:8080" # Expose API Gateway on port 8080
     depends_on:
       - servicediscovery  # Ensure Service Discovery is up before API Gateway
       - keycloak
     networks:
       - app-network  # Attach to the app network
 
+
   # Product Service
   product:
     build:
-      context: ./product  # Build product service from the specified directory
+      context: ./product # Build product service from the specified directory
     environment:
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://servicediscovery:8761/eureka
       SPRING_DATA_MONGODB_HOST: mongo
@@ -98,16 +123,22 @@ services:
       - keycloak
     networks:
       - app-network  # Attach to the app network
+    deploy:
+      replicas: 1  # Scale to 3 instances
 
   # Order Service
   order:
     build:
-      context: ./order  # Build order service from the specified directory
+      context: ./order # Build order service from the specified directory
     environment:
+
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://servicediscovery:8761/eureka
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql-order:3306/orderDb  # MySQL Order DB URL
       SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI: http://keycloak:9090/realms/kaleidoscope-microservice-realm/protocol/openid-connect/certs
       SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSURER_URI: http://keycloak:9090/realms/kaleidoscope-microservice-realm
+      - spring.datasource.username=root
+      - spring.datasource.password=manoj22561
+      - spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
     depends_on:
       - servicediscovery  # Ensure Service Discovery is up before Order Service
       - mysql-order  # Ensure MySQL Order DB is up before Order Service
@@ -115,16 +146,21 @@ services:
       - keycloak
     networks:
       - app-network  # Attach to the app network
+    deploy:
+      replicas: 1  # Scale to 3 instances
 
   # Inventory Service
   inventory:
     build:
-      context: ./inventory  # Build inventory service from the specified directory
+      context: ./inventory # Build inventory service from the specified directory
     environment:
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://servicediscovery:8761/eureka
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql_inventory:3306/inventoryDb  # MySQL Inventory DB URL
       SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI: http://keycloak:9090/realms/kaleidoscope-microservice-realm/protocol/openid-connect/certs
       SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSURER_URI: http://keycloak:9090/realms/kaleidoscope-microservice-realm
+      - spring.datasource.username=root
+      - spring.datasource.password=manoj22561
+      - spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
     depends_on:
       - servicediscovery  # Ensure Service Discovery is up before Inventory Service
       - apigateway  # Ensure API Gateway is up before Inventory Service
@@ -132,22 +168,30 @@ services:
       - keycloak
     networks:
       - app-network  # Attach to the app network
+    deploy:
+      replicas: 1  # Scale to 3 instances
 
   # Feedback Service
   feedback:
     build:
-      context: ./feedback  # Build feedback service from the specified directory
+      context: ./feedback # Build feedback service from the specified directory
     environment:
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://servicediscovery:8761/eureka
 #      SPRING_DATASOURCE_URL: jdbc:mysql://mysql_inventory:3306/inventoryDb  # MySQL Inventory DB URL
       SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI: http://keycloak:9090/realms/kaleidoscope-microservice-realm/protocol/openid-connect/certs
       SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSURER_URI: http://keycloak:9090/realms/kaleidoscope-microservice-realm
+      - spring.datasource.username=root
+      - spring.datasource.password=manoj22561
+      - spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
     depends_on:
       - servicediscovery  # Ensure Service Discovery is up before Feedback Service
       - apigateway  # Ensure API Gateway is up before Feedback Service
       - keycloak
+      - mysql-feedback
     networks:
       - app-network  # Attach to the app network
+    deploy:
+      replicas: 1  # Scale to 3 instances
 
   keycloak:
     container_name: keycloak
@@ -177,7 +221,8 @@ volumes:
   postgres_keycloak_data:
   mongo_product_data:
 
+
 # Define the app network for all services to communicate with each other
 networks:
   app-network:
-    driver: bridge  # Use the bridge network driver for communication between containers
+    driver: bridge # Use the bridge network driver for communication between containers

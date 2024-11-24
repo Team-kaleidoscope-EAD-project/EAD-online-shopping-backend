@@ -31,12 +31,12 @@ public class shippingController {
     }
 
     @DeleteMapping("/deleteshipping/{shippingId}")
-    public String deleteShipping(@PathVariable Integer shippingId) {
+    public String deleteShipping(@PathVariable("shippingId") Integer shippingId) {
         return shippingService.deleteShipping(shippingId);
     }
 
     @GetMapping("/getshippingbyorderid/{orderId}")
-    public List<shippingDto> getAllOrderItemsByOrderId(@PathVariable Integer orderId) {
+    public List<shippingDto> getAllOrderItemsByOrderId(@PathVariable("orderId") Integer orderId) {
         return shippingService.getShippingByOrderId(orderId);
     }
 }

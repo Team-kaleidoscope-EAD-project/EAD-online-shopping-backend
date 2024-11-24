@@ -4,13 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class InventoryDTO {
-    private int inventoryItemId;
-    private int productId;
-    private String color;
-    private String size;
+    private String sku;
     private Integer quantity;
+    private LocalDateTime lastRestockedAt;
 }
