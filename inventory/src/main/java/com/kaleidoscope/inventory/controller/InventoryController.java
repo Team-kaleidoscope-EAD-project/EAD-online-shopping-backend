@@ -9,7 +9,7 @@ import java.util.List;
 
 @RestController
 @CrossOrigin
-@RequestMapping(value = "api/v1/inventory")
+@RequestMapping(value = "api/v1/inventory/")
 public class InventoryController {
     @Autowired
     private InventoryService inventoryService;
@@ -19,9 +19,9 @@ public class InventoryController {
         return inventoryService.getAllInventoryItems();
     }
 
-    @GetMapping("/getinventoryitem/{inventoryItemId}")
-    public InventoryDTO getInventoryItem(@PathVariable Integer inventoryItemId) {
-        return inventoryService.getInventoryItemById(inventoryItemId);
+    @GetMapping("/getinventoryitem/{sku}")
+    public InventoryDTO getInventoryItem(@PathVariable String sku) {
+        return inventoryService.getInventoryItemBySku(sku);
     }
 
     @PostMapping("/addinventoryitem")
@@ -34,8 +34,8 @@ public class InventoryController {
         return inventoryService.updateInventoryItem(inventoryDTO);
     }
 
-    @DeleteMapping("/deleteinventoryitem/{inventoryItemId}")
-    public String deleteInventoryItem(@PathVariable Integer inventoryItemId) {
-        return inventoryService.deleteInventoryItem(inventoryItemId);
+    @DeleteMapping("/deleteinventoryitem/{sku}")
+    public String deleteInventoryItem(@PathVariable String sku) {
+        return inventoryService.deleteInventoryItem(sku);
     }
 }
