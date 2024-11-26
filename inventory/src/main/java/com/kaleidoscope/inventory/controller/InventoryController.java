@@ -4,7 +4,7 @@ import com.kaleidoscope.inventory.dto.InventoryDTO;
 import com.kaleidoscope.inventory.service.InventoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
+import reactor.core.publisher.Mono;
 import java.util.List;
 
 @RestController
@@ -14,6 +14,11 @@ import java.util.List;
 public class InventoryController {
     @Autowired
     private InventoryService inventoryService;
+
+    @GetMapping("/test")
+    public Mono<String> testItems() {
+        return Mono.just("Inventory is working");
+    }
 
     @GetMapping("/getinventoryitems")
     public List<InventoryDTO> getInventoryItems() {
