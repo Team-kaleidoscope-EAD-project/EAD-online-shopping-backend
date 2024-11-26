@@ -9,7 +9,7 @@ import java.time.LocalDate;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class orederDto {
+public class orderDto {
     private int id;
     private String status;
     private Float totalAmount;
