@@ -1,5 +1,6 @@
 package com.kaleidoscope.order.controller;
 
+import com.kaleidoscope.order.kafka.OrderProducer;
 import com.kaleidoscope.order.service.orderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -13,8 +14,13 @@ public class orderController {
     @Autowired
     private orderService orderService;
 
+    @Autowired
+    private OrderProducer orderProducer;
+
     @GetMapping("/test")
     public Mono<String> testOrder() {
+        String message = "Order is commited";
+        orderProducer.sendMessage(message);
         return orderService.testOrder();
     }
 
