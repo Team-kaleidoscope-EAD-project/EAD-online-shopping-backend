@@ -22,6 +22,7 @@
         <module>feedback</module>
         <module>servicediscovery</module>
         <module>apigateway</module>
+        <module>base</module>
     </modules>
 
     <properties>
