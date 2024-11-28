@@ -1,7 +1,5 @@
 package com.kaleidoscope.order.service;
 
-
-
 import com.kaleidoscope.order.model.orderModel;
 import com.kaleidoscope.order.repo.orderItemRepo;
 import com.kaleidoscope.order.repo.orderRepo;
@@ -48,7 +46,7 @@ public class orderItemService {
 
         orderItemModel savedItem = orderItemRepository.save(orderItemModel);
 
-        // Convert back to DTO if needed
+
         return new orderItemDto(
                 savedItem.getId(),
                 orderItemDto.getOrderid(),
@@ -59,9 +57,9 @@ public class orderItemService {
     }
 
     public List<orderItemDto> addOrderItems(List<orderItemDto> orderItemDtos) {
-        // Iterate through each order item DTO, add it to the database, and collect the saved items
+
         return orderItemDtos.stream()
-                .map(this::addOrderItem) // Reuse the existing addOrderItem method
+                .map(this::addOrderItem)
                 .collect(Collectors.toList());
     }
 
