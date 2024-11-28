@@ -9,7 +9,7 @@ import org.springframework.http.HttpStatus;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import reactor.core.publisher.Mono;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,6 +21,12 @@ public class ProductController {
 
     @Autowired
     private ProductService productService;
+
+
+    @GetMapping("/test")
+    public Mono<String> testItems() {
+        return Mono.just("Product is working");
+    }
 
 
     @GetMapping("/")
