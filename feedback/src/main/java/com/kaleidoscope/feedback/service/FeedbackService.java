@@ -1,7 +1,9 @@
 package com.kaleidoscope.feedback.service;
 
 import com.kaleidoscope.feedback.dto.FeedbackDTO;
+import com.kaleidoscope.feedback.dto.RatingDTO;
 import com.kaleidoscope.feedback.model.Feedback;
+import com.kaleidoscope.feedback.model.Rating;
 import com.kaleidoscope.feedback.repo.FeedbackRepo;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
@@ -29,11 +31,18 @@ public class FeedbackService {
         return modelMapper.map(FeedbackList, new TypeToken<List<FeedbackDTO>>(){}.getType());
     }
 
-    public FeedbackDTO getOneFeedback(int feedbackId){
-        Optional<Feedback> feedback = feedbackRepo.findById(feedbackId);
-        return feedback.map(f -> modelMapper.map(f, FeedbackDTO.class))
-                .orElse(null);
+    public List<FeedbackDTO> getFeedbackByProductId(Integer productId){
+        List<Feedback> feedback = feedbackRepo.findByProductId(productId);
+        return feedback.stream().map(f -> modelMapper.map(f, FeedbackDTO.class))
+                .toList();
     }
+
+    public List<FeedbackDTO> getFeedbackByUserId(Integer userId){
+        List<Feedback> feedback = feedbackRepo.findByUserId(userId);
+        return feedback.stream().map(f -> modelMapper.map(f, FeedbackDTO.class))
+                .toList();
+    }
+
 
     public FeedbackDTO updateFeedback(FeedbackDTO feedbackDTO){
         feedbackRepo.save(modelMapper.map(feedbackDTO, Feedback.class));

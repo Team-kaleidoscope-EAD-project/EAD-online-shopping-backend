@@ -1,10 +1,10 @@
 package com.kaleidoscope.feedback.controller;
 
 import com.kaleidoscope.feedback.dto.FeedbackDTO;
+import com.kaleidoscope.feedback.dto.FeedbackWithRatingDTO;
 import com.kaleidoscope.feedback.service.FeedbackService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
@@ -24,12 +24,17 @@ public class FeedbackController {
         return feedbackService.getAllFeedbacks();
     }
 
-    @GetMapping("/getfeedback/{feedbackId}")
-    public FeedbackDTO findById(@PathVariable int feedbackId) {
-        return feedbackService.getOneFeedback(feedbackId);
+    @GetMapping("/getfeedback/byproduct/{productId}")
+    public List<FeedbackDTO> findByProductId(@PathVariable Integer productId) {
+        return feedbackService.getFeedbackByProductId(productId);
     }
 
-    @PutMapping("/updatefeedback")
+    @GetMapping("/getfeedback/byuser/{userId}")
+    public List<FeedbackDTO> findByUserId(@PathVariable Integer userId) {
+        return feedbackService.getFeedbackByUserId(userId);
+    }
+
+    @PutMapping("/updatefeedback/{feedbackId}")
     public FeedbackDTO updateFeedback(@RequestBody FeedbackDTO feedbackDTO) {
         return feedbackService.updateFeedback(feedbackDTO);
     }
