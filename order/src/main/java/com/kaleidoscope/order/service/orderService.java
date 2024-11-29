@@ -15,7 +15,6 @@ import java.util.List;
 
 @Service
 @Transactional
-
 public class orderService {
     private final WebClient inventoryWebClient;
     private final WebClient productWebClient;
@@ -64,9 +63,16 @@ public class orderService {
         }.getType());
     }
 
-    public orderDto addOrder(orderDto orderDto) {
-        orderrepo.save(modelMapper.map(orderDto, orderModel.class));
-        return orderDto;
+
+    public orederDto addOrder(orederDto orederDto){
+        System.out.println(orederDto);
+        orderModel orderModel = modelMapper.map(orederDto, orderModel.class);
+
+        orderModel savedOrder = orderrepo.saveAndFlush(orderModel);
+
+        return modelMapper.map(savedOrder, orederDto.class);
+
+
     }
 
     public orderDto updateOrder(orderDto orderDto){
