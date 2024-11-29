@@ -27,6 +27,7 @@ public class orderController {
     @GetMapping("/getallorders")
     public List<orderDto> getAllOrders() {
         return orderService.getOrders();
+
     }
 
     @PostMapping("/addorder")
