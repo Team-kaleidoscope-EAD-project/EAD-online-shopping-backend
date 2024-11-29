@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.kaleidoscope.order.dto.shippingDto;
 import com.kaleidoscope.order.model.shippingModel;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,7 +31,8 @@ public class shippingService {
 
     public List<shippingDto> getAllShipping(){
         List<shippingModel> shippingList = shippingRepository.findAll();
-        return modelMapper.map(shippingList, new TypeToken<List<shippingDto>>(){}.getType());
+        return modelMapper.map(shippingList, new TypeToken<List<shippingDto>>() {
+        }.getType());
     }
 
     public shippingDto addShipping(shippingDto shippingDto){
@@ -83,7 +85,7 @@ public class shippingService {
 
     }
 
-    public String deleteShipping(Integer ItemId){
+    public String deleteShipping(Integer ItemId) {
 //        shippingRepository.delete(modelMapper.map(shippingDto, shippingModel.class));
         shippingRepository.deleteById(ItemId);
         return "Shipping deleted";

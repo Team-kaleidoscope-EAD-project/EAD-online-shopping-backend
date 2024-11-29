@@ -1,10 +1,10 @@
 package com.kaleidoscope.order.controller;
 
-import com.kaleidoscope.order.dto.paymentDto;
 import com.kaleidoscope.order.service.shippingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import com.kaleidoscope.order.dto.shippingDto;
+
 import java.util.List;
 
 @RestController
@@ -19,10 +19,12 @@ public class shippingController {
     public List<shippingDto> getAllShippings() {
         return shippingService.getAllShipping();
     }
+
     @PostMapping("/addshipping")
     public shippingDto addOrderItem(@RequestBody shippingDto shippingDto) {
         return shippingService.addShipping(shippingDto);
     }
+
     @PutMapping("/updateshipping")
     public shippingDto updateOrderItem(@RequestBody shippingDto shippingDto) {
         return shippingService.updateShipping(shippingDto);

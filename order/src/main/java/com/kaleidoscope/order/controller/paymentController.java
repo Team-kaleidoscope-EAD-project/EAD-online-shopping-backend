@@ -1,6 +1,5 @@
 package com.kaleidoscope.order.controller;
 
-import com.kaleidoscope.order.dto.orderItemDto;
 import com.kaleidoscope.order.dto.paymentDto;
 import com.kaleidoscope.order.service.paymentService;
 import org.springframework.beans.factory.annotation.Autowired;

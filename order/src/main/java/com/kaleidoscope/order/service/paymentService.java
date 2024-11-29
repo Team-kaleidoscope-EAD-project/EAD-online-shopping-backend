@@ -30,7 +30,8 @@ public class paymentService {
 
     public List<paymentDto> getAllPayments() {
         List<paymentModel> paymentList = paymentRepository.findAll();
-        return modelMapper.map(paymentList, new TypeToken<List<paymentDto>>(){}.getType());
+        return modelMapper.map(paymentList, new TypeToken<List<paymentDto>>() {
+        }.getType());
     }
 
     public paymentDto addPayment(paymentDto paymentDto){
