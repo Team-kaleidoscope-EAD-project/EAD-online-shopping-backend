@@ -17,12 +17,17 @@ public class Product {
     private String category;
     private double price;
 
+    private String brand;
+
+
     private String imageUrl;
+
     private List<Variant> variants;
 
     @Data
     public static class Variant {
         private String color;
+        private String imageUrl;
         private List<Size> sizes;
     }
 

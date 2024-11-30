@@ -3,22 +3,33 @@ package com.kaleidoscope.product.service;
 
 import com.kaleidoscope.product.dto.ProductVariantDTO;
 
+import com.kaleidoscope.product.exception.InvalidProductException;
+import com.kaleidoscope.product.exception.ProductNotFoundException;
+import com.kaleidoscope.product.filter.service.ProductFilterService;
+
 import com.kaleidoscope.product.model.Product;
 import com.kaleidoscope.product.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 
 @Service
 public class ProductService {
 
+    public ProductService(ProductRepository productRepository, ProductFilterService filterService){
+        this.productRepository = productRepository;
+        this.filterService = filterService;
+    }
     @Autowired
     private ProductRepository productRepository;
+    private final ProductFilterService filterService;
 
 
     // Retrieve all products
@@ -38,6 +49,9 @@ public class ProductService {
     // Create a new product
     public Product createProduct(Product product) {
         // Generate SKU for each size variant before saving
+        if (product.getName() == null || product.getName().isEmpty()) {
+            throw new InvalidProductException("Product name cannot be empty.");
+        }
         generateSkus(product);
         return productRepository.save(product);
     }
@@ -67,19 +81,24 @@ public class ProductService {
             product.setCategory(updatedProduct.getCategory());
             product.setPrice(updatedProduct.getPrice());
 
+
             product.setImageUrl(updatedProduct.getImageUrl());
+
             return productRepository.save(product);
-        }).orElseThrow(() -> new RuntimeException("Product not found"));
+        }).orElseThrow(() -> new ProductNotFoundException("Product with ID " + id + " not found"));
     }
 
     // Delete a product by ID
     public void deleteProduct(String id) {
+        if (!productRepository.existsById(id)) {
+            throw new ProductNotFoundException("Product with ID " + id + " not found");
+        }
         productRepository.deleteById(id);
     }
 
     // Retrieve a product variant by SKU
     public Optional<ProductVariantDTO> getProductBySku(String sku) {
-        return productRepository.findAll().stream()
+        return Optional.ofNullable(productRepository.findAll().stream()
                 .flatMap(product -> product.getVariants().stream()
                         .flatMap(variant -> variant.getSizes().stream()
                                 .filter(size -> size.getSku().equals(sku))
@@ -91,11 +110,37 @@ public class ProductService {
                                     dto.setColor(variant.getColor());
                                     dto.setSize(size.getSize());
                                     dto.setSku(size.getSku());
-                                    dto.setPrice(product.getPrice());  // Assuming the price is at the product level
+                                    dto.setPrice(product.getPrice());
+                                    dto.setBrand(product.getBrand());
                                     return dto;
                                 })
                         )
                 )
-                .findFirst();
-    }}
+
+                .findFirst().orElseThrow(() -> new ProductNotFoundException("Product with SKU " + sku + " not found")));
+
+    }
+
+    // Retrieve products based on filters. This will return products that match all the filters
+    public List<Product> getFilteredProducts(
+            List<String> categories,
+            List<String> colors,
+            List<String> brands,
+            List<String> sizes,
+            Double minPrice,
+            Double maxPrice) {
+
+        return productRepository.findAll().stream()
+                .filter(product -> (categories == null || categories.isEmpty() || categories.contains(product.getCategory())))
+                .filter(product -> (colors == null || colors.isEmpty() || product.getVariants().stream()
+                        .anyMatch(variant -> colors.contains(variant.getColor()))))
+                .filter(product -> (brands == null || brands.isEmpty() || brands.contains(product.getName()))) // Assuming name reflects brand
+                .filter(product -> (sizes == null || sizes.isEmpty() || product.getVariants().stream()
+                        .flatMap(variant -> variant.getSizes().stream())
+                        .anyMatch(size -> sizes.contains(size.getSize()))))
+                .filter(product -> (minPrice == null || product.getPrice() >= minPrice))
+                .filter(product -> (maxPrice == null || product.getPrice() <= maxPrice))
+                .collect(Collectors.toList());
+    }
+}
 

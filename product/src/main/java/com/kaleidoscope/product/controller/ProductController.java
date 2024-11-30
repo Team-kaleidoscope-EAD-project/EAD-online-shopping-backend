@@ -15,7 +15,9 @@ import java.util.Optional;
 
 @RestController
 
-@RequestMapping("/api/v1/product")
+@RequestMapping("/api/v1/products")
+
+
 
 public class ProductController {
 
@@ -78,5 +80,23 @@ public class ProductController {
         Optional<ProductVariantDTO> productVariant = productService.getProductBySku(sku);
         return productVariant.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
+
+
+    // Get /api/products/filter - Filter products by category, color, brand, size, price
+    // Ex /filter?categories=Clothing&categories=Cap&colors=Red&colors=Blue&brands=Nike&brands=Adidas&sizes=M&sizes=L&minPrice=50&maxPrice=500
+    // Can Filter different same attributes with multiple values
+    @GetMapping("/filter")
+    public ResponseEntity<List<Product>> filterProducts(
+            @RequestParam(required = false) List<String> categories,
+            @RequestParam(required = false) List<String> colors,
+            @RequestParam(required = false) List<String> brands,
+            @RequestParam(required = false) List<String> sizes,
+            @RequestParam(required = false) Double minPrice,
+            @RequestParam(required = false) Double maxPrice) {
+
+        List<Product> filteredProducts = productService.getFilteredProducts(categories, colors, brands, sizes, minPrice, maxPrice);
+        return ResponseEntity.ok(filteredProducts);
+    }
+
 
 }

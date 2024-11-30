@@ -7,6 +7,7 @@ public class ProductVariantDTO {
     private String productId;
     private String productName;
     private String color;
+    private String brand;
     private String size;
     private String category;
     private String sku;
