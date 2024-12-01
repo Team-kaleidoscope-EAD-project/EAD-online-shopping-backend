@@ -6,7 +6,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.kaleidoscope.order.dto.placeOrderDto;
-import com.kaleidoscope.order.dto.orederDto;
+import com.kaleidoscope.order.dto.orderDto;
 import com.kaleidoscope.order.dto.orderItemDto;
 import com.kaleidoscope.order.dto.shippingDto;
 import com.kaleidoscope.order.dto.paymentDto;
@@ -37,7 +37,7 @@ public class placeOrderService {
     public placeOrderDto placeOrder(placeOrderDto placeOrderDto) {
 
         System.out.println(placeOrderDto.getOrderDetails());
-        orederDto createOrder = orderService.addOrder(placeOrderDto.getOrderDetails());
+        orderDto createOrder = orderService.addOrder(placeOrderDto.getOrderDetails());
 
         Integer newOrderId = createOrder.getId();
         if (newOrderId == null || newOrderId <= 0) {

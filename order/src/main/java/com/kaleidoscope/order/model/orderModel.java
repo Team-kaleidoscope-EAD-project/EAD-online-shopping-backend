@@ -19,7 +19,7 @@ public class orderModel {
     private int id;
     private String status;
     private Float totalAmount;
-    private Integer userId;
+    private String userId;
     private LocalDate orderDate;
     private Float discountAmount;
 

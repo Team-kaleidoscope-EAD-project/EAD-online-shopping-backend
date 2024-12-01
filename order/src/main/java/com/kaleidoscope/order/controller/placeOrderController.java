@@ -1,7 +1,7 @@
 package com.kaleidoscope.order.controller;
 
 import com.kaleidoscope.order.dto.StripeDto;
-import com.kaleidoscope.order.dto.orederDto;
+import com.kaleidoscope.order.dto.orderDto;
 import com.kaleidoscope.order.service.placeOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

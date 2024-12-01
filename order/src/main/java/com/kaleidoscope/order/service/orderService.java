@@ -6,7 +6,7 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.kaleidoscope.order.dto.orederDto;
+import com.kaleidoscope.order.dto.orderDto;
 import com.kaleidoscope.order.model.orderModel;
 import java.util.List;
 
@@ -19,49 +19,49 @@ public class orderService {
     @Autowired
     private ModelMapper modelMapper;
 
-    public List<orederDto> getOrders(){
+    public List<orderDto> getOrders(){
         List<orderModel> orderList = orderrepo.findAll();
-        return modelMapper.map(orderList, new TypeToken<List<orederDto>>(){}.getType());
+        return modelMapper.map(orderList, new TypeToken<List<orderDto>>(){}.getType());
     }
 
-    public orederDto addOrder(orederDto orederDto){
+    public orderDto addOrder(orderDto orederDto){
         System.out.println(orederDto);
         orderModel orderModel = modelMapper.map(orederDto, orderModel.class);
 
         orderModel savedOrder = orderrepo.saveAndFlush(orderModel);
 
-        return modelMapper.map(savedOrder, orederDto.class);
+        return modelMapper.map(savedOrder, orderDto.class);
 
     }
 
-    public orederDto updateOrder(orederDto orederDto){
-        if (orderrepo.existsById(orederDto.getId())) {
-            orderModel existingOrder = orderrepo.findById(orederDto.getId()).orElse(null);
+    public orderDto updateOrder(orderDto orderDto){
+        if (orderrepo.existsById(orderDto.getId())) {
+            orderModel existingOrder = orderrepo.findById(orderDto.getId()).orElse(null);
 
             if (existingOrder != null) {
 
-                existingOrder.setStatus(orederDto.getStatus());
-                existingOrder.setTotalAmount(orederDto.getTotalAmount());
-                existingOrder.setUserId(orederDto.getUserId());
-                existingOrder.setOrderDate(orederDto.getOrderDate());
-                existingOrder.setDiscountAmount(orederDto.getDiscountAmount());
+                existingOrder.setStatus(orderDto.getStatus());
+                existingOrder.setTotalAmount(orderDto.getTotalAmount());
+                existingOrder.setUserId(orderDto.getUserId());
+                existingOrder.setOrderDate(orderDto.getOrderDate());
+                existingOrder.setDiscountAmount(orderDto.getDiscountAmount());
 
 
                 orderrepo.save(existingOrder);
 
 
-                return modelMapper.map(existingOrder, orederDto.class);
+                return modelMapper.map(existingOrder, orderDto.class);
             }
         }
 
         // Throw an exception or handle the case where the order doesn't exist
-        throw new RuntimeException("Order not found with ID: " + orederDto.getId());
+        throw new RuntimeException("Order not found with ID: " + orderDto.getId());
 
 
     }
 
     public String deleteOrder(Integer orderId){
-//        orderrepo.delete(modelMapper.map(orederDto, orderModel.class));
+//        orderrepo.delete(modelMapper.map(orderDto, orderModel.class));
         orderrepo.deleteById(orderId);
         return "Order deleted";
     }
