@@ -26,5 +26,5 @@ public class orderItemModel {
     private orderModel orderModel;
     private Float price;
     private int quantity;
-    private int productId;
+    private String sku;
 }

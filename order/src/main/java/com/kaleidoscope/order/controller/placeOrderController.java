@@ -12,8 +12,7 @@ import com.kaleidoscope.order.service.ConfirmOrderService;
 import java.util.List;
 
 @RestController
-@CrossOrigin
-@RequestMapping(value = "api/v1/placeorder/")
+@RequestMapping(value = "api/v1/order/")
 public class placeOrderController {
 
     @Autowired

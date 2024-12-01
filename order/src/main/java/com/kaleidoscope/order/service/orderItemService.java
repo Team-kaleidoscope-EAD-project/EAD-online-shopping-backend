@@ -44,7 +44,7 @@ public class orderItemService {
         orderItemModel.setOrderModel(orderModel);
         orderItemModel.setPrice(orderItemDto.getPrice());
         orderItemModel.setQuantity(orderItemDto.getQuantity());
-        orderItemModel.setProductId(orderItemDto.getProductId());
+        orderItemModel.setSku(orderItemDto.getSku());
 
         orderItemModel savedItem = orderItemRepository.save(orderItemModel);
 
@@ -54,7 +54,7 @@ public class orderItemService {
                 orderItemDto.getOrderid(),
                 savedItem.getPrice(),
                 savedItem.getQuantity(),
-                savedItem.getProductId()
+                savedItem.getSku()
         );
     }
 
@@ -77,7 +77,7 @@ public class orderItemService {
         existingOrderItem.setOrderModel(associatedOrderModel);
         existingOrderItem.setPrice(orderItemDto.getPrice());
         existingOrderItem.setQuantity(orderItemDto.getQuantity());
-        existingOrderItem.setProductId(orderItemDto.getProductId());
+        existingOrderItem.setSku(orderItemDto.getSku());
 
 
         orderItemModel updatedOrderItem = orderItemRepository.save(existingOrderItem);
@@ -88,7 +88,7 @@ public class orderItemService {
                 updatedOrderItem.getOrderModel().getId(),
                 updatedOrderItem.getPrice(),
                 updatedOrderItem.getQuantity(),
-                updatedOrderItem.getProductId()
+                updatedOrderItem.getSku()
         );
     }
 
@@ -112,7 +112,7 @@ public class orderItemService {
                 orderItem.getOrderModel().getId(),
                 orderItem.getPrice(),
                 orderItem.getQuantity(),
-                orderItem.getProductId()
+                orderItem.getSku()
         );
     }
 }

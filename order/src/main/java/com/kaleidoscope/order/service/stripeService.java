@@ -5,15 +5,8 @@ import com.stripe.param.PaymentIntentConfirmParams;
 import com.stripe.Stripe;
 import com.stripe.model.PaymentIntent;
 import com.stripe.param.PaymentIntentCreateParams;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
-import com.kaleidoscope.order.dto.StripeDto;
-
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 

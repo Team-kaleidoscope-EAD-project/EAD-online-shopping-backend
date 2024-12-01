@@ -87,17 +87,24 @@ public class orderService {
                 existingOrder.setUserId(orderDto.getUserId());
                 existingOrder.setOrderDate(orderDto.getOrderDate());
                 existingOrder.setDiscountAmount(orderDto.getDiscountAmount());
+                existingOrder.setStatus(orderDto.getStatus());
+                existingOrder.setTotalAmount(orderDto.getTotalAmount());
+                existingOrder.setUserId(orderDto.getUserId());
+                existingOrder.setOrderDate(orderDto.getOrderDate());
+                existingOrder.setDiscountAmount(orderDto.getDiscountAmount());
 
 
                 orderrepo.save(existingOrder);
 
 
                 return modelMapper.map(existingOrder, orderDto.class);
+               
             }
         }
 
         // Throw an exception or handle the case where the order doesn't exist
         throw new RuntimeException("Order not found with ID: " + orderDto.getId());
+      
 
 
     }

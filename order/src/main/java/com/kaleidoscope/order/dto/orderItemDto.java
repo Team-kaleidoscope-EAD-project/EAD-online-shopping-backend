@@ -16,7 +16,7 @@ public class orderItemDto {
     private int orderid;
     private Float price;
     private int quantity;
-    private int productId;
+    private String sku;
 
 
 }
