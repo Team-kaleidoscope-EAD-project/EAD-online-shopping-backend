@@ -30,21 +30,24 @@ public class stripeService {
         try {
             long amount = stripeDto.getAmount();
             String currency = stripeDto.getCurrency();
-            String paymentMethodId = stripeDto.getMethodType();
+            // String paymentMethodId = stripeDto.getMethodType();
+
+            System.out.println("latest"+amount+currency);
+            
 
             PaymentIntentCreateParams params = PaymentIntentCreateParams.builder()
                     .setAmount(amount)
                     .setCurrency(currency)
-                    .addPaymentMethodType("card")
+                    // .addPaymentMethodType("card")
                     .build();
 
             PaymentIntent paymentIntent = PaymentIntent.create(params);
 
-            PaymentIntentConfirmParams confirmParams = PaymentIntentConfirmParams.builder()
-                    .setPaymentMethod(paymentMethodId)
-                    .build();
+            // PaymentIntentConfirmParams confirmParams = PaymentIntentConfirmParams.builder()
+            //         .setPaymentMethod(paymentMethodId)
+            //         .build();
 
-            paymentIntent = paymentIntent.confirm(confirmParams);
+            // paymentIntent = paymentIntent.confirm(confirmParams);
 
             Map<String, Object> responseData = new HashMap<>();
             responseData.put("clientSecret", paymentIntent.getClientSecret());

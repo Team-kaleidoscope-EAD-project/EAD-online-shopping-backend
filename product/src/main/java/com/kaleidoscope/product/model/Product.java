@@ -35,6 +35,6 @@ public class Product {
     public static class Size {
         private String size;
         private String sku;  // SKU is a string
-    }
+    }  
 
 }

@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 public class StripeDto {
     private long amount;
     private String currency;
-    private String methodType;
+    // private String methodType;
 
 }
 

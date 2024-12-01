@@ -130,6 +130,8 @@ public class ProductService {
             Double minPrice,
             Double maxPrice) {
 
+                
+
         return productRepository.findAll().stream()
                 .filter(product -> (categories == null || categories.isEmpty() || categories.contains(product.getCategory())))
                 .filter(product -> (colors == null || colors.isEmpty() || product.getVariants().stream()

@@ -15,7 +15,7 @@ import java.util.Optional;
 
 @RestController
 
-@RequestMapping("/api/v1/products")
+@RequestMapping("/api/v1/product")
 
 
 
@@ -48,7 +48,7 @@ public class ProductController {
     }
 
     // POST /api/products - Create a new product
-    @PostMapping
+    @PostMapping("/addproduct")
     public ResponseEntity<Product> createProduct(@RequestBody Product product) {
         Product createdProduct = productService.createProduct(product);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdProduct);
@@ -94,6 +94,7 @@ public class ProductController {
             @RequestParam(required = false) Double minPrice,
             @RequestParam(required = false) Double maxPrice) {
 
+                System.out.println(categories);
         List<Product> filteredProducts = productService.getFilteredProducts(categories, colors, brands, sizes, minPrice, maxPrice);
         return ResponseEntity.ok(filteredProducts);
     }

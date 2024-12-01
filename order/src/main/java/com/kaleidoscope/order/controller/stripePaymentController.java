@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 @RestController
-@CrossOrigin
+
 @RequestMapping(value = "api/v1/order/stripepayment")
 public class stripePaymentController {
 

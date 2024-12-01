@@ -59,18 +59,19 @@ public class orderService {
 
     public List<orderDto> getOrders() {
         List<orderModel> orderList = orderrepo.findAll();
+        System.out.println(orderList);
         return modelMapper.map(orderList, new TypeToken<List<orderDto>>() {
         }.getType());
     }
 
 
-    public orederDto addOrder(orederDto orederDto){
+    public orderDto addOrder(orderDto orederDto){
         System.out.println(orederDto);
         orderModel orderModel = modelMapper.map(orederDto, orderModel.class);
 
         orderModel savedOrder = orderrepo.saveAndFlush(orderModel);
 
-        return modelMapper.map(savedOrder, orederDto.class);
+        return modelMapper.map(savedOrder, orderDto.class);
 
 
     }
