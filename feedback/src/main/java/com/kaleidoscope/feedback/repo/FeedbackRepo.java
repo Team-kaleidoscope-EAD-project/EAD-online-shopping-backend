@@ -10,8 +10,8 @@ import java.util.List;
 
 @Repository
 public interface FeedbackRepo extends JpaRepository<Feedback, Integer> {
-    List<Feedback> findByUserId(@NonNull Integer feedbackId);
-    List<Feedback> findByProductId(@NonNull Integer productId);
+    List<Feedback> findByUserId(@NonNull Long userId);
+    List<Feedback> findByProductId(@NonNull Long productId);
 
 
 }

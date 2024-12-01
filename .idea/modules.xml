@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/EAD-online-shopping-backend.iml" filepath="$PROJECT_DIR$/.idea/EAD-online-shopping-backend.iml" />
+      <module fileurl="file://$PROJECT_DIR$/feedback/feedback.iml" filepath="$PROJECT_DIR$/feedback/feedback.iml" />
     </modules>
   </component>
 </project>

@@ -25,12 +25,12 @@ public class FeedbackController {
     }
 
     @GetMapping("/getfeedback/byproduct/{productId}")
-    public List<FeedbackDTO> findByProductId(@PathVariable Integer productId) {
+    public List<FeedbackDTO> findByProductId(@PathVariable Long productId) {
         return feedbackService.getFeedbackByProductId(productId);
     }
 
     @GetMapping("/getfeedback/byuser/{userId}")
-    public List<FeedbackDTO> findByUserId(@PathVariable Integer userId) {
+    public List<FeedbackDTO> findByUserId(@PathVariable Long userId) {
         return feedbackService.getFeedbackByUserId(userId);
     }
 

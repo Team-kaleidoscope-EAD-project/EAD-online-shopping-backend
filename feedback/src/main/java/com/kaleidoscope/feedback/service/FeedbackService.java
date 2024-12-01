@@ -31,13 +31,13 @@ public class FeedbackService {
         return modelMapper.map(FeedbackList, new TypeToken<List<FeedbackDTO>>(){}.getType());
     }
 
-    public List<FeedbackDTO> getFeedbackByProductId(Integer productId){
+    public List<FeedbackDTO> getFeedbackByProductId(Long productId){
         List<Feedback> feedback = feedbackRepo.findByProductId(productId);
         return feedback.stream().map(f -> modelMapper.map(f, FeedbackDTO.class))
                 .toList();
     }
 
-    public List<FeedbackDTO> getFeedbackByUserId(Integer userId){
+    public List<FeedbackDTO> getFeedbackByUserId(Long userId){
         List<Feedback> feedback = feedbackRepo.findByUserId(userId);
         return feedback.stream().map(f -> modelMapper.map(f, FeedbackDTO.class))
                 .toList();
