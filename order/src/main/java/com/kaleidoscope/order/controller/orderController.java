@@ -1,8 +1,11 @@
 package com.kaleidoscope.order.controller;
 
+import com.kaleidoscope.order.dto.InventoryUpdateDto;
+import com.kaleidoscope.order.kafka.InventoryUpdateProducer;
 import com.kaleidoscope.order.kafka.OrderProducer;
 import com.kaleidoscope.order.service.orderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.kaleidoscope.order.dto.orderDto;
 import reactor.core.publisher.Mono;
@@ -17,6 +20,9 @@ public class orderController {
     @Autowired
     private OrderProducer orderProducer;
 
+    @Autowired
+    private  InventoryUpdateProducer inventoryUpdateProducer;
+
     @GetMapping("/test")
     public Mono<String> testOrder() {
         String message = "Order is commited";
@@ -24,6 +30,12 @@ public class orderController {
         return orderService.testOrder();
     }
 
+    @PostMapping("/publish")
+    public ResponseEntity<String> publish(@RequestBody InventoryUpdateDto inventoryUpdateDto) {
+        inventoryUpdateProducer.sendInventoryUpdate(inventoryUpdateDto);
+        return ResponseEntity.ok("Message sent to Kafka successfully");
+    
+    }
     @GetMapping("/getallorders")
     public List<orderDto> getAllOrders() {
         return orderService.getOrders();
