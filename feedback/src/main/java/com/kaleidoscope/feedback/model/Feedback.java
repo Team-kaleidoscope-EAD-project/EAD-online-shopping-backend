@@ -7,14 +7,17 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
+@Table(name = "feedback",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"product_id", "user_id"}))
 public class Feedback {
-    @Id //primary key
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // automatic ID generator.
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "feedback_id")
     private int feedbackId;
 
@@ -23,11 +26,8 @@ public class Feedback {
     private LocalDateTime dateTime;
 
     private String feedbackContent;
-
-//    @ManyToOne
-//    private User user;
-
-//    @ManyToOne
-//    private Product product;
+    private String productId;
+    private String userId;
+    private Integer rating;
 
 }

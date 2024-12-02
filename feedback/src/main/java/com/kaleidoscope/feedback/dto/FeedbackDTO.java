@@ -12,13 +12,11 @@ import java.time.LocalDateTime;
 
 public class FeedbackDTO {
 
-    private Long feedbackId;
-    private LocalDateTime dateTime;
-    private String feedbackContent;
+        private Long feedbackId;
+        private LocalDateTime dateTime;
+        private String feedbackContent;
+        private String productId;
+        private String userId;
+        private Integer rating;
 
-//    @ManyToOne
-//    private User user;
-
-//    @ManyToOne
-//    private Product product;
 }
