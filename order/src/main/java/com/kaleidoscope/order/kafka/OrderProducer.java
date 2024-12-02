@@ -8,6 +8,7 @@ import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Service;
+import com.kaleidoscope.order.dto.InventoryUpdateDto;
 
 @Service
 public class OrderProducer {

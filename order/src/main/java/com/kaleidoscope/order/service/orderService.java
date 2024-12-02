@@ -1,6 +1,8 @@
 package com.kaleidoscope.order.service;
 
+import com.kaleidoscope.order.dto.InventoryUpdateDto;
 import com.kaleidoscope.order.dto.orderDto;
+import com.kaleidoscope.order.kafka.OrderProducer;
 import com.kaleidoscope.order.model.orderModel;
 import com.kaleidoscope.order.repo.orderRepo;
 import jakarta.transaction.Transactional;
@@ -12,6 +14,8 @@ import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Mono;
 import java.util.List;
+import com.kaleidoscope.order.kafka.OrderProducer;
+
 
 @Service
 @Transactional
@@ -24,6 +28,9 @@ public class orderService {
 
     @Autowired
     private ModelMapper modelMapper;
+
+    @Autowired
+private OrderProducer orderProducer;
 
     public orderService(WebClient inventoryWebClient, WebClient productWebClient) {
         this.inventoryWebClient = inventoryWebClient;
@@ -57,9 +64,9 @@ public class orderService {
     }
 
 
+
     public List<orderDto> getOrders() {
         List<orderModel> orderList = orderrepo.findAll();
-        System.out.println(orderList);
         return modelMapper.map(orderList, new TypeToken<List<orderDto>>() {
         }.getType());
     }
@@ -82,17 +89,21 @@ public class orderService {
 
             if (existingOrder != null) {
 
-                existingOrder.setStatus(orderDto.getStatus());
-                existingOrder.setTotalAmount(orderDto.getTotalAmount());
-                existingOrder.setUserId(orderDto.getUserId());
-                existingOrder.setOrderDate(orderDto.getOrderDate());
-                existingOrder.setDiscountAmount(orderDto.getDiscountAmount());
-                existingOrder.setStatus(orderDto.getStatus());
-                existingOrder.setTotalAmount(orderDto.getTotalAmount());
-                existingOrder.setUserId(orderDto.getUserId());
-                existingOrder.setOrderDate(orderDto.getOrderDate());
-                existingOrder.setDiscountAmount(orderDto.getDiscountAmount());
-
+                if (orderDto.getStatus() != null) {
+                    existingOrder.setStatus(orderDto.getStatus());
+                }
+                if (orderDto.getTotalAmount() != null) {
+                    existingOrder.setTotalAmount(orderDto.getTotalAmount());
+                }
+                if (orderDto.getUserId() != null) {
+                    existingOrder.setUserId(orderDto.getUserId());
+                }
+                if (orderDto.getOrderDate() != null) {
+                    existingOrder.setOrderDate(orderDto.getOrderDate());
+                }
+                if (orderDto.getDiscountAmount() != null) {
+                    existingOrder.setDiscountAmount(orderDto.getDiscountAmount());
+                }
 
                 orderrepo.save(existingOrder);
 
@@ -102,7 +113,7 @@ public class orderService {
             }
         }
 
-        // Throw an exception or handle the case where the order doesn't exist
+
         throw new RuntimeException("Order not found with ID: " + orderDto.getId());
       
 

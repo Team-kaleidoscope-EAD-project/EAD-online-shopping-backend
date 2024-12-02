@@ -12,5 +12,5 @@ import java.time.LocalDateTime;
 public class InventoryDTO {
     private String sku;
     private Integer quantity;
-    private LocalDateTime lastRestockedAt;
+    private LocalDateTime lastRestockedAt; 
 }
