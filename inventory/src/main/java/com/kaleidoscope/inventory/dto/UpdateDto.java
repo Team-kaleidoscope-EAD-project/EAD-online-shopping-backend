@@ -7,18 +7,12 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class InventoryUpdateDTO {
+public class UpdateDto {
     private String sku;
     private int quantity;
 
-
-    // Getters and Setters
-
     @Override
     public String toString() {
-        return "InventoryUpdateDtoConsumer{" +
-                "productId='" + sku + '\'' +
-                ", quantity=" + quantity +
-                '}';
+        return "InventoryUpdateDTO{productId='" + sku + "', quantity=" + quantity + "}";
     }
-}
+    }

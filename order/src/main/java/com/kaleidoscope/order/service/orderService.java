@@ -64,7 +64,6 @@ private OrderProducer orderProducer;
     }
 
 
-
     public List<orderDto> getOrders() {
         List<orderModel> orderList = orderrepo.findAll();
         return modelMapper.map(orderList, new TypeToken<List<orderDto>>() {
@@ -106,7 +105,6 @@ private OrderProducer orderProducer;
                 }
 
                 orderrepo.save(existingOrder);
-
 
                 return modelMapper.map(existingOrder, orderDto.class);
                

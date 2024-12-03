@@ -31,8 +31,8 @@ public class orderController {
     }
 
     @PostMapping("/publish")
-    public ResponseEntity<String> publish(@RequestBody InventoryUpdateDto inventoryUpdateDto) {
-        inventoryUpdateProducer.sendInventoryUpdate(inventoryUpdateDto);
+    public ResponseEntity<String> publish(@RequestBody List<InventoryUpdateDto> inventoryUpdateDto) {
+        inventoryUpdateProducer.sendInventoryUpdateList(inventoryUpdateDto);
         return ResponseEntity.ok("Message sent to Kafka successfully");
     
     }
