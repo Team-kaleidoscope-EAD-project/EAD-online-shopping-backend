@@ -81,4 +81,20 @@ public class ProductController {
         return ResponseEntity.ok(filteredProducts);
     }
 
+    // GET /api/products/search?name=example - Search products by any substring in the name
+    // Ex: http://localhost:8080/api/v1/products/search?name=Shirt
+    @GetMapping("/search")
+    public ResponseEntity<List<Product>> searchProductsBySubstring(@RequestParam String name) {
+        if (name == null || name.trim().isEmpty()) {
+            return ResponseEntity.badRequest().body(List.of());
+        }
+        List<Product> products = productService.searchProductsByName(name);
+        if (products.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(List.of());
+        }
+        return ResponseEntity.ok(products);
+    }
+
+
+
 }

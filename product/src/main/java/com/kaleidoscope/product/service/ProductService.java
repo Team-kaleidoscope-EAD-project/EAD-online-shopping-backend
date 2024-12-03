@@ -128,4 +128,8 @@ public class ProductService {
                 .filter(product -> (maxPrice == null || product.getPrice() <= maxPrice))
                 .collect(Collectors.toList());
     }
+
+    public List<Product> searchProductsByName(String name) {
+        return productRepository.findByNameContainingIgnoreCase(name);
+    }
 }
