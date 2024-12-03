@@ -22,4 +22,10 @@ public class Rating {
     @NotNull(message = "Rating value must not be null")
     private Integer ratingValue;
 
+    public Rating(Object o, String user1, String product1, int i) {
+    }
+
+    public Rating() {
+
+    }
 }
