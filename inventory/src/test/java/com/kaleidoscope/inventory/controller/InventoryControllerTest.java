@@ -1,101 +1,121 @@
-//package com.kaleidoscope.inventory.controller;
-//
-//import com.kaleidoscope.inventory.dto.InventoryDTO;
-//import com.kaleidoscope.inventory.service.InventoryService;
-//import com.fasterxml.jackson.databind.ObjectMapper;
-//import org.junit.jupiter.api.Test;
-//import org.mockito.Mockito;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-//import org.springframework.boot.test.mock.mockito.MockBean;
-//import org.springframework.http.MediaType;
-//import org.springframework.test.web.servlet.MockMvc;
-//
-//import java.util.Arrays;
-//import java.util.List;
-//
-//import static org.mockito.ArgumentMatchers.any;
-//import static org.mockito.Mockito.when;
-//import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-//import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-//
-//@WebMvcTest(InventoryController.class)
-//public class InventoryControllerTest {
-//
-//    @Autowired
-//    private MockMvc mockMvc; //simulates HTTP requests
-//
-//    @MockBean
-//    private InventoryService inventoryService; // Mocks InventoryServices
-//
-//    @Autowired
-//    private ObjectMapper objectMapper; // Convert object to JSON
-//
-//    @Test
-//    public void testGetInventoryItems() throws Exception {
-//        List<InventoryDTO> items = Arrays.asList(
-//                new InventoryDTO(1, 101, "Red", "M", 10),
-//                new InventoryDTO(2, 102, "Blue", "L", 20)
-//        );
-//
-//        when(inventoryService.getAllInventoryItems()).thenReturn(items); // Mock the service call
-//
-//        mockMvc.perform(get("/api/v1/inventory/getinventoryitems"))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.length()").value(2))
-//                .andExpect(jsonPath("$[0].color").value("Red"))
-//                .andExpect(jsonPath("$[1].size").value("L"));
-//    }
-//
-//    @Test
-//    public void testGetInventoryItem() throws Exception {
-//        InventoryDTO item = new InventoryDTO(1, 101, "Red", "M", 10);
-//
-//        when(inventoryService.getInventoryItemById(1)).thenReturn(item);
-//
-//        mockMvc.perform(get("/api/v1/inventory/getinventoryitem/{inventoryItemId}", 1))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.color").value("Red"))
-//                .andExpect(jsonPath("$.quantity").value(10));
-//    }
-//
-//    @Test
-//    public void testSaveInventoryItem() throws Exception {
-//        InventoryDTO dto = new InventoryDTO(0, 103, "Green", "S", 30);
-//
-//        when(inventoryService.saveInventoryItem(any(InventoryDTO.class))).thenReturn(dto);
-//
-//        mockMvc.perform(post("/api/v1/inventory/addinventoryitem")
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content(objectMapper.writeValueAsString(dto)))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.color").value("Green"))
-//                .andExpect(jsonPath("$.size").value("S"))
-//                .andExpect(jsonPath("$.quantity").value(30));
-//    }
-//
-//    @Test
-//    public void testUpdateInventoryItem() throws Exception {
-//        InventoryDTO dto = new InventoryDTO(1, 104, "Blue", "M", 50);
-//
-//        when(inventoryService.updateInventoryItem(any(InventoryDTO.class))).thenReturn(dto);
-//
-//        mockMvc.perform(put("/api/v1/inventory/updateinventoryitem")
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content(objectMapper.writeValueAsString(dto)))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.productId").value(104))
-//                .andExpect(jsonPath("$.quantity").value(50));
-//    }
-//
-//    @Test
-//    public void testDeleteInventoryItem() throws Exception {
-//        when(inventoryService.deleteInventoryItem(1)).thenReturn("Inventory Item deleted successfully");
-//
-//        mockMvc.perform(delete("/api/v1/inventory/deleteinventoryitem/{inventoryItemId}", 1))
-//                .andExpect(status().isOk())
-//                .andExpect(content().string("Inventory Item deleted successfully"));
-//    }
-//}
-//
-//
+package com.kaleidoscope.inventory.controller;
+
+import com.kaleidoscope.inventory.dto.InventoryDTO;
+import com.kaleidoscope.inventory.service.InventoryService;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.web.reactive.server.WebTestClient;
+import reactor.core.publisher.Mono;
+import reactor.core.publisher.Flux;
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.List;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.reactive.server.WebTestClient.bindToController;
+
+@WebFluxTest(InventoryController.class)  // This will load only the controller for testing
+public class InventoryControllerTest {
+
+    @MockBean
+    private InventoryService inventoryService;
+
+    @Autowired
+    private WebTestClient webTestClient;
+
+    private InventoryDTO inventoryItem;
+
+    @BeforeEach
+    void setUp() {
+        // Setup mock inventory item with LocalDateTime for lastRestockedAt
+        inventoryItem = new InventoryDTO("sku123", 10, LocalDateTime.now());
+    }
+
+    @Test
+    void testTestItems() {
+        webTestClient.get()
+                .uri("/api/v1/inventory/test")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(String.class)
+                .isEqualTo("Inventory is working");
+    }
+
+    @Test
+    void testGetInventoryItems() {
+        List<InventoryDTO> inventoryItems = Arrays.asList(
+                new InventoryDTO("sku123", 10, LocalDateTime.now().minusDays(1)),
+                new InventoryDTO("sku456", 20, LocalDateTime.now().minusDays(2))
+        );
+
+        when(inventoryService.getAllInventoryItems()).thenReturn(inventoryItems);
+
+        webTestClient.get()
+                .uri("/api/v1/inventory/getinventoryitems")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBodyList(InventoryDTO.class)
+                .hasSize(2)
+                .contains(inventoryItem);  // Ensure InventoryDTO matches
+    }
+
+    @Test
+    void testGetInventoryItemBySku() {
+        when(inventoryService.getInventoryItemBySku("sku123")).thenReturn(inventoryItem);
+
+        webTestClient.get()
+                .uri("/api/v1/inventory/getinventoryitem/{sku}", "sku123")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(InventoryDTO.class)
+                .value(inventoryDTO -> {
+                    // Assert inventoryDTO properties correctly, especially the lastRestockedAt as LocalDateTime
+                    assert inventoryDTO.getSku().equals("sku123");
+                    assert inventoryDTO.getQuantity() == 10;
+                    assert inventoryDTO.getLastRestockedAt() != null;  // Make sure it's properly set
+                });
+    }
+
+    @Test
+    void testSaveInventoryItem() {
+        when(inventoryService.saveInventoryItem(inventoryItem)).thenReturn(inventoryItem);
+
+        webTestClient.post()
+                .uri("/api/v1/inventory/addinventoryitem")
+                .bodyValue(inventoryItem)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(InventoryDTO.class)
+                .isEqualTo(inventoryItem);
+    }
+
+    @Test
+    void testUpdateInventoryItem() {
+        when(inventoryService.updateInventoryItem(inventoryItem)).thenReturn(inventoryItem);
+
+        webTestClient.put()
+                .uri("/api/v1/inventory/updateinventoryitem")
+                .bodyValue(inventoryItem)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(InventoryDTO.class)
+                .isEqualTo(inventoryItem);
+    }
+
+    @Test
+    void testDeleteInventoryItem() {
+        when(inventoryService.deleteInventoryItem("sku123")).thenReturn("Item deleted successfully");
+
+        webTestClient.delete()
+                .uri("/api/v1/inventory/deleteinventoryitem/{sku}", "sku123")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(String.class)
+                .isEqualTo("Item deleted successfully");
+    }
+}
