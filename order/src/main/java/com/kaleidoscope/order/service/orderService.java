@@ -2,8 +2,10 @@ package com.kaleidoscope.order.service;
 
 import com.kaleidoscope.order.dto.InventoryUpdateDto;
 import com.kaleidoscope.order.dto.orderDto;
+import com.kaleidoscope.order.dto.paymentDto;
 import com.kaleidoscope.order.kafka.OrderProducer;
 import com.kaleidoscope.order.model.orderModel;
+import com.kaleidoscope.order.model.paymentModel;
 import com.kaleidoscope.order.repo.orderRepo;
 import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
@@ -119,5 +121,11 @@ private OrderProducer orderProducer;
 //        orderrepo.delete(modelMapper.map(orederDto, orderModel.class));
         orderrepo.deleteById(orderId);
         return "Order deleted";
+    }
+
+    public List<orderDto> getOrdersByUserId(String userId) {
+        List<orderModel> userOrders = orderrepo.findByUserId(userId);
+        return modelMapper.map(userOrders, new TypeToken<List<orderDto>>() {
+        }.getType());
     }
 }
