@@ -13,4 +13,6 @@ public class InventoryDTO {
     private String sku;
     private Integer quantity;
     private LocalDateTime lastRestockedAt; 
+
+    
 }

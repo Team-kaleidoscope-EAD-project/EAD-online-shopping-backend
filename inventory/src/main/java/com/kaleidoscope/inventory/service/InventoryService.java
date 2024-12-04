@@ -26,11 +26,13 @@ public class InventoryService {
     }
 
     public InventoryDTO getInventoryItemBySku(String sku) {
+       
         InventoryItem inventoryItem = inventoryRepo.findBySku(sku);
         return modelMapper.map(inventoryItem, InventoryDTO.class);
-    }
+    } 
 
     public InventoryDTO saveInventoryItem(InventoryDTO inventoryDTO) {
+        // System.out.println(inventoryDTO);
         inventoryRepo.save(modelMapper.map(inventoryDTO, InventoryItem.class));
         return inventoryDTO;
     }
