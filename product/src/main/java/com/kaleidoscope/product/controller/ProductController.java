@@ -115,6 +115,21 @@ public class ProductController {
     }
 
 
+    // Get related products (top 3)
+    @GetMapping("/related")
+    public ResponseEntity<List<Product>> getRelatedProducts(@RequestParam String name) {
+        if (name == null || name.trim().isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+        List<Product> relatedProducts = productService.getRelatedProducts(name);
+        return ResponseEntity.ok(relatedProducts);
+    }
 
+    // API to get new arrivals
+    @GetMapping("/new-arrivals")
+    public ResponseEntity<List<Product>> getNewArrivals() {
+        List<Product> newArrivals = productService.getNewArrivals();
+        return ResponseEntity.ok(newArrivals);
+    }
 
 }
