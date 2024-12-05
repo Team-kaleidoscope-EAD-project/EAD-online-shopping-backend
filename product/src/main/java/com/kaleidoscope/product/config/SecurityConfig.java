@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -32,17 +33,10 @@ public class SecurityConfig implements WebFluxConfigurer {
         http
                 .csrf(ServerHttpSecurity.CsrfSpec::disable) // Disable CSRF if not required
                 .authorizeExchange(exchanges -> exchanges
-//                        .pathMatchers("/api/v1/inventory/getinventoryitems").permitAll()
-//                        .pathMatchers(AUTH_WHITELIST).permitAll()
-                        .pathMatchers("/api/auth/**", "/api/**").permitAll()
-//                        .pathMatchers(HttpMethod.GET, "/api/v1/product", "/api/v1/product/{productId}", "/api/v1/product/categories", "/api/v1/product/search").permitAll()
-//                        .pathMatchers(HttpMethod.POST, "/api/v1/product").hasRole("ADMIN")
-//                        .pathMatchers(HttpMethod.PUT, "/api/v1/product/{productId}").hasRole("ADMIN")
-//                        .pathMatchers(HttpMethod.DELETE, "/api/v1/product/{productId}").hasRole("ADMIN")
-//                        .pathMatchers("/api/inventory/**").hasAnyRole("ADMIN")
-//                        .pathMatchers("/api/order/**").hasAnyRole("USER")
-//                                .pathMatchers("/api/v1/product/").hasRole("kalei_ADMIN")
-//                        .pathMatchers("/api/v1/order/getallorders").hasRole("kalei_CLIENT").anyExchange().authenticated()
+                        .pathMatchers("/api/v1/product/","/api/v1/product/test","/api/v1/product/{id}","/api/v1/product/sku/{sku}","/api/v1/product/filter").permitAll()
+                        .pathMatchers(HttpMethod.POST, "/api/v1/product/addproduct").hasRole("kalei_ADMIN")
+                        .pathMatchers(HttpMethod.PUT, "/api/v1/product/{id}").hasRole("kalei_ADMIN")
+                        .pathMatchers(HttpMethod.DELETE, "/api/v1/product/{id}").hasRole("kalei_ADMIN")
                 )
 
                 .oauth2ResourceServer(oauth2 -> oauth2
