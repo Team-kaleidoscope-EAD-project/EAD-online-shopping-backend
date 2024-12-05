@@ -1,47 +1,17 @@
-
-
 services:
-  mysql-order:
+  mysql:
     image: mysql
-    container_name: mysql_order
+    container_name: mysql
     ports:
       - "3307:3306"
     environment:
-      MYSQL_ROOT_PASSWORD: manoj22561
+      MYSQL_ROOT_PASSWORD: "$DATABASE_ROOT_PASSWORD"
       MYSQL_DATABASE: orderDb
     volumes:
-      - mysql_order_data:/var/lib/mysql
+      - mysql_data:/var/lib/mysql
     networks:
       - app-network
     restart: always
-
-  mysql-inventory:
-    image: mysql
-    container_name: mysql_inventory
-    ports:
-      - "3308:3306"
-    environment:
-      MYSQL_ROOT_PASSWORD: manoj22561
-      MYSQL_DATABASE: inventoryDb
-    restart: always
-    volumes:
-      - mysql_inventory_data:/var/lib/mysql
-    networks:
-      - app-network
-
-  mysql-feedback:
-    image: mysql
-    container_name: mysql_feedback
-    ports:
-      - "3309:3306"
-    environment:
-      MYSQL_ROOT_PASSWORD: manoj22561
-      MYSQL_DATABASE: feedbackDb
-    restart: always
-    volumes:
-      - mysql_feedback_data:/var/lib/mysql
-    networks:
-      - app-network
 
   mongo-product:
     container_name: mongo
@@ -114,9 +84,9 @@ services:
       context: ./order
     environment:
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://servicediscovery:8761/eureka
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-order:3306/orderDb
-      SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: manoj22561
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/orderDb?createDatabaseIfNotExist=true
+      SPRING_DATASOURCE_USERNAME: "$DATABASE_ROOT_USERNAME"
+      SPRING_DATASOURCE_PASSWORD: "$DATABASE_ROOT_PASSWORD"
       SPRING_DATASOURCE_DRIVER-CLASS-NAME: com.mysql.cj.jdbc.Driver
       SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI: http://keycloak:9090/realms/kaleidoscope-microservice-realm/protocol/openid-connect/certs
       SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSURER_URI: http://keycloak:9090/realms/kaleidoscope-microservice-realm
@@ -126,7 +96,7 @@ services:
       SPRING_KAFKA_TEMPLATE_DEFAULT_TOPIC: order-default_topic
     depends_on:
       - servicediscovery
-      - mysql-order
+      - mysql
       - apigateway
       - keycloak
       - kafka
@@ -140,9 +110,9 @@ services:
       context: ./inventory
     environment:
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://servicediscovery:8761/eureka
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql_inventory:3306/inventoryDb
-      SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: manoj22561
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/inventoryDb?createDatabaseIfNotExist=true
+      SPRING_DATASOURCE_USERNAME: "$DATABASE_ROOT_USERNAME"
+      SPRING_DATASOURCE_PASSWORD: "$DATABASE_ROOT_PASSWORD"
       SPRING_DATASOURCE_DRIVER-CLASS-NAME: com.mysql.cj.jdbc.Driver
       SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI: http://keycloak:9090/realms/kaleidoscope-microservice-realm/protocol/openid-connect/certs
       SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSURER_URI: http://keycloak:9090/realms/kaleidoscope-microservice-realm
@@ -157,7 +127,7 @@ services:
     depends_on:
       - servicediscovery
       - apigateway
-      - mysql-inventory
+      - mysql
       - keycloak
       - kafka
     networks:
@@ -170,9 +140,9 @@ services:
       context: ./feedback
     environment:
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://servicediscovery:8761/eureka
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql_feedback:3306/feedbackDb
-      SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: manoj22561
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/feedbackDb?createDatabaseIfNotExist=true
+      SPRING_DATASOURCE_USERNAME: "$DATABASE_ROOT_USERNAME"
+      SPRING_DATASOURCE_PASSWORD: "$DATABASE_ROOT_PASSWORD"
       SPRING_DATASOURCE_DRIVER-CLASS-NAME: com.mysql.cj.jdbc.Driver
       SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI: http://keycloak:9090/realms/kaleidoscope-microservice-realm/protocol/openid-connect/certs
       SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSURER_URI: http://keycloak:9090/realms/kaleidoscope-microservice-realm
@@ -180,7 +150,7 @@ services:
       - servicediscovery
       - apigateway
       - keycloak
-      - mysql-feedback
+      - mysql
     networks:
       - app-network
     deploy:
@@ -234,9 +204,7 @@ services:
     restart: always
 
 volumes:
-  mysql_order_data:
-  mysql_inventory_data:
-  mysql_feedback_data:
+  mysql_data:
   postgres_keycloak_data:
   mongo_product_data:
 
