@@ -1,7 +1,6 @@
 package com.kaleidoscope.order.service;
 
-
-
+import com.kaleidoscope.order.kafka.InventoryUpdateProducer;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,11 +9,9 @@ import com.kaleidoscope.order.dto.orderDto;
 import com.kaleidoscope.order.dto.orderItemDto;
 import com.kaleidoscope.order.dto.shippingDto;
 import com.kaleidoscope.order.dto.paymentDto;
-
-
+import com.kaleidoscope.order.dto.InventoryUpdateDto;
 import java.util.List;
 import java.util.stream.Collectors;
-
 
 @Service
 @Transactional
@@ -32,7 +29,11 @@ public class placeOrderService {
     @Autowired
     private orderItemService orderItemService;
 
+    @Autowired
+    private DtoConvertService dtoConvertService;
 
+    @Autowired
+    private InventoryUpdateProducer inventoryUpdateProducer;
 
     public placeOrderDto placeOrder(placeOrderDto placeOrderDto) {
 
@@ -64,9 +65,18 @@ public class placeOrderService {
                 .collect(Collectors.toList());
         List<orderItemDto> createdOrderItems = orderItemService.addOrderItems(orderItems);
 
+
+        List<InventoryUpdateDto> inventoryUpdates = createdOrderItems.stream()
+                .map(dtoConvertService::convertToInventoryUpdateDto)
+                .collect(Collectors.toList());
+
+
+        inventoryUpdateProducer.sendInventoryUpdateList(inventoryUpdates);
+
         return new placeOrderDto(createOrder, createPayment, createShipping ,createdOrderItems);
 
     }
+
 }
 
 
