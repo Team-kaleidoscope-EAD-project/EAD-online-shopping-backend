@@ -18,7 +18,7 @@ public class InventoryItem {
     @Column(nullable = false)
     private Integer quantity;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private LocalDateTime lastRestockedAt;
 }
 

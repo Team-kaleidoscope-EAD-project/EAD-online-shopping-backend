@@ -77,8 +77,8 @@ public class ProductService {
             product.setDescription(updatedProduct.getDescription());
             product.setCategory(updatedProduct.getCategory());
             product.setPrice(updatedProduct.getPrice());
-
-
+            product.setBrand(updatedProduct.getBrand());
+            product.setVariants(updatedProduct.getVariants());
             product.setImageUrl(updatedProduct.getImageUrl());
 
             return productRepository.save(product);
@@ -122,7 +122,7 @@ public class ProductService {
     public List<Product> getFilteredProducts(
             List<String> categories,
             List<String> colors,
-            List<String> brands,
+            List<String> brand,
             List<String> sizes,
             Double minPrice,
             Double maxPrice) {
@@ -133,7 +133,7 @@ public class ProductService {
                 .filter(product -> (categories == null || categories.isEmpty() || categories.contains(product.getCategory())))
                 .filter(product -> (colors == null || colors.isEmpty() || product.getVariants().stream()
                         .anyMatch(variant -> colors.contains(variant.getColor()))))
-                .filter(product -> (brands == null || brands.isEmpty() || brands.contains(product.getName()))) // Assuming name reflects brand
+                .filter(product -> (brand == null || brand.isEmpty() || brand.contains(product.getBrand()))) // Assuming name reflects brand
                 .filter(product -> (sizes == null || sizes.isEmpty() || product.getVariants().stream()
                         .flatMap(variant -> variant.getSizes().stream())
                         .anyMatch(size -> sizes.contains(size.getSize()))))
