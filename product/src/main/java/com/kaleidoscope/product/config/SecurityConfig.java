@@ -37,6 +37,7 @@ public class SecurityConfig implements WebFluxConfigurer {
                         .pathMatchers(HttpMethod.POST, "/api/v1/product/addproduct").hasRole("kalei_ADMIN")
                         .pathMatchers(HttpMethod.PUT, "/api/v1/product/{id}").hasRole("kalei_ADMIN")
                         .pathMatchers(HttpMethod.DELETE, "/api/v1/product/{id}").hasRole("kalei_ADMIN")
+                        .anyExchange().authenticated()
                 )
 
                 .oauth2ResourceServer(oauth2 -> oauth2

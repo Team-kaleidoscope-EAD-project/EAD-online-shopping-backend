@@ -30,7 +30,7 @@ public class SecurityConfig implements WebFluxConfigurer {
     @Bean
     public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
         http
-                .csrf(ServerHttpSecurity.CsrfSpec::disable) // Disable CSRF if not required
+                .csrf(ServerHttpSecurity.CsrfSpec::disable)
                 .authorizeExchange(exchanges -> exchanges
 //                                .pathMatchers("/api/v1/inventory/getinventoryitems").permitAll()
 //                        .pathMatchers(AUTH_WHITELIST).permitAll()
