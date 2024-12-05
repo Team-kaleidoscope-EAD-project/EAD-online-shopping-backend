@@ -37,6 +37,16 @@ public class SecurityConfig implements WebFluxConfigurer {
                                 .pathMatchers(HttpMethod.POST, "/api/v1/product/addproduct").hasRole("kalei_ADMIN")
                                 .pathMatchers(HttpMethod.PUT, "/api/v1/product/{id}").hasRole("kalei_ADMIN")
                                 .pathMatchers(HttpMethod.DELETE, "/api/v1/product/{id}").hasRole("kalei_ADMIN")
+
+                                .pathMatchers("/api/v1/feedback/getfeedbacks","/api/v1/feedback/getfeedback/byproduct/{productId}","/api/v1/feedback/getfeedback/byuser/{userId}").permitAll()
+                                .pathMatchers(HttpMethod.POST, "/api/v1/feedback/addfeedback").hasRole("kalei_CLIENT")
+                                .pathMatchers(HttpMethod.PUT, "/api/v1/feedback/updatefeedback/{feedbackId}").hasRole("kalei_CLIENT")
+                                .pathMatchers(HttpMethod.DELETE, "/api/v1/feedback/deletefeedback/{feedbackId}").hasRole("kalei_CLIENT")
+
+                                .pathMatchers("/api/v1/inventory/getinventoryitems","/api/v1/inventory/getinventoryitem/{sku}","/api/v1/inventory/test").permitAll()
+                                .pathMatchers(HttpMethod.POST, "/api/v1/inventory/addinventoryitem").hasRole("kalei_ADMIN")
+                                .pathMatchers(HttpMethod.PUT, "/api/v1/inventory/updateinventoryitem").hasRole("kalei_ADMIN")
+                                .pathMatchers(HttpMethod.DELETE, "/api/v1/inventory/deleteinventoryitem/{sku}").hasRole("kalei_ADMIN")
 //                        .pathMatchers("/api/v1/inventory/getinventoryitems").hasRole("kalei_CLIENT")
 //                                .pathMatchers("api/v1/feedback/public").hasRole("kalei_CLIENT")
 //                        .pathMatchers(AUTH_WHITELIST).permitAll()
@@ -48,7 +58,8 @@ public class SecurityConfig implements WebFluxConfigurer {
 //                        .pathMatchers("/api/inventory/**").hasAnyRole("ADMIN")
 //                        .pathMatchers("/api/order/**").hasAnyRole("USER")
 //                                .pathMatchers("/api/v1/product/").hasRole("kalei_CLIENT")
-//                        .pathMatchers("/api/v1/order/getallorders").hasRole("kalei_CLIENT").anyExchange().authenticated()
+//                        .pathMatchers("/api/v1/order/getallorders").hasRole("kalei_CLIENT")
+                        .anyExchange().authenticated()
                 )
 
                 .oauth2ResourceServer(oauth2 -> oauth2
