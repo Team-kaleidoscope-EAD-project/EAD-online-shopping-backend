@@ -89,13 +89,13 @@ public class ProductController {
     public ResponseEntity<List<Product>> filterProducts(
             @RequestParam(required = false) List<String> categories,
             @RequestParam(required = false) List<String> colors,
-            @RequestParam(required = false) List<String> brands,
+            @RequestParam(required = false) List<String> brand,
             @RequestParam(required = false) List<String> sizes,
             @RequestParam(required = false) Double minPrice,
             @RequestParam(required = false) Double maxPrice) {
 
                 System.out.println(categories);
-        List<Product> filteredProducts = productService.getFilteredProducts(categories, colors, brands, sizes, minPrice, maxPrice);
+        List<Product> filteredProducts = productService.getFilteredProducts(categories, colors, brand, sizes, minPrice, maxPrice);
         return ResponseEntity.ok(filteredProducts);
     }
 
