@@ -28,9 +28,6 @@ public class orderItemService {
     @Autowired
     private orderRepo orderRepo;
 
-    @Autowired
-    private DtoConvertService dtoConvertService;
-
 
 
     public List<orderItemDto> getOrderItems(){
@@ -105,9 +102,17 @@ public class orderItemService {
         List<orderItemModel> orderItems = orderItemRepository.findByOrderModelId(orderId);
 
         return orderItems.stream()
-                .map(dtoConvertService::convertOrderItemToDto)
+                .map(this::convertToDto)
                 .collect(Collectors.toList());
     }
 
-
+    private orderItemDto convertToDto(orderItemModel orderItem) {
+        return new orderItemDto(
+                orderItem.getId(),
+                orderItem.getOrderModel().getId(),
+                orderItem.getPrice(),
+                orderItem.getQuantity(),
+                orderItem.getSku()
+        );
+    }
 }

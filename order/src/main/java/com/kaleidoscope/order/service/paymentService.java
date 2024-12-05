@@ -28,9 +28,6 @@ public class paymentService {
     @Autowired
     private orderRepo orderRepo;
 
-    @Autowired
-    private DtoConvertService dtoConvertService;
-
     public List<paymentDto> getAllPayments() {
         List<paymentModel> paymentList = paymentRepository.findAll();
         return modelMapper.map(paymentList, new TypeToken<List<paymentDto>>() {
@@ -100,8 +97,17 @@ public class paymentService {
          List<paymentModel> payments = paymentRepository.findByOrderModelId(orderId);
 
         return payments.stream()
-                .map(dtoConvertService::convertToPaymentDto)
+                .map(this::convertToDto)
                 .collect(Collectors.toList());
     }
 
+    private paymentDto convertToDto(paymentModel payment) {
+        return new paymentDto(
+                payment.getId(),
+                payment.getPaymentMethod(),
+                payment.getOrderModel().getId(),
+                payment.getPaymentDate(),
+                payment.getPaymentAmount()
+        );
+    }
 }

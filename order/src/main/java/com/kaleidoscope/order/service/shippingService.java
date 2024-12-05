@@ -29,9 +29,6 @@ public class shippingService {
     @Autowired
     private orderRepo orderRepo;
 
-    @Autowired
-    private DtoConvertService dtoConvertService;
-
     public List<shippingDto> getAllShipping(){
         List<shippingModel> shippingList = shippingRepository.findAll();
         return modelMapper.map(shippingList, new TypeToken<List<shippingDto>>() {
@@ -48,7 +45,9 @@ public class shippingService {
         shippingModel.setShippingAddress(shippingDto.getShippingAddress());
         shippingModel.setShippingDate(shippingDto.getShippingDate());
 
+
         shippingModel savedItem = shippingRepository.save(shippingModel);
+
 
         return new shippingDto(
                 savedItem.getId(),
@@ -67,11 +66,15 @@ public class shippingService {
         orderModel associatedShippingModel = orderRepo.findById(shippingDto.getOrderId())
                 .orElseThrow(() -> new RuntimeException("Order not found with ID: " + shippingDto.getOrderId()));
 
+
         existingShipping.setOrderModel(associatedShippingModel);
         existingShipping.setShippingDate(shippingDto.getShippingDate());
         existingShipping.setShippingAddress(shippingDto.getShippingAddress());
 
+
+
         shippingModel updatedShipping = shippingRepository.save(existingShipping);
+
 
         return new shippingDto(
                 updatedShipping.getId(),
@@ -93,9 +96,20 @@ public class shippingService {
         List<shippingModel> shippings = shippingRepository.findByOrderModelId(orderId);
 
         return shippings.stream()
-                .map(dtoConvertService::convertToShippingDto)
+                .map(this::convertToDto)
                 .collect(Collectors.toList());
     }
+
+    private shippingDto convertToDto(shippingModel shipping) {
+        return new shippingDto(
+                shipping.getId(),
+                shipping.getShippingAddress(),
+                shipping.getOrderModel().getId(),
+                shipping.getShippingDate()
+
+        );
+    }
+
 
     }
 

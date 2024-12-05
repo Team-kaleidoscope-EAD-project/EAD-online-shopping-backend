@@ -100,36 +100,4 @@ public class ProductController {
     }
 
 
-    // GET /api/products/search?name=example - Search products by any substring in the name
-    // Ex: http://localhost:8080/api/v1/products/search?name=Shirt
-    @GetMapping("/search")
-    public ResponseEntity<List<Product>> searchProductsBySubstring(@RequestParam String name) {
-        if (name == null || name.trim().isEmpty()) {
-            return ResponseEntity.badRequest().body(List.of());
-        }
-        List<Product> products = productService.searchProductsByName(name);
-        if (products.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(List.of());
-        }
-        return ResponseEntity.ok(products);
-    }
-
-
-    // Get related products (top 3)
-    @GetMapping("/related")
-    public ResponseEntity<List<Product>> getRelatedProducts(@RequestParam String name) {
-        if (name == null || name.trim().isEmpty()) {
-            return ResponseEntity.badRequest().build();
-        }
-        List<Product> relatedProducts = productService.getRelatedProducts(name);
-        return ResponseEntity.ok(relatedProducts);
-    }
-
-    // API to get new arrivals
-    @GetMapping("/new-arrivals")
-    public ResponseEntity<List<Product>> getNewArrivals() {
-        List<Product> newArrivals = productService.getNewArrivals();
-        return ResponseEntity.ok(newArrivals);
-    }
-
 }

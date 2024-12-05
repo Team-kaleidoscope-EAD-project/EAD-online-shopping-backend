@@ -1,7 +1,5 @@
 package com.kaleidoscope.order.kafka;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kaleidoscope.order.dto.InventoryUpdateDto;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.slf4j.Logger;
@@ -12,8 +10,6 @@ import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class InventoryUpdateProducer {
@@ -27,27 +23,14 @@ public class InventoryUpdateProducer {
         this.kafkaTemplate = kafkaTemplate;
     }
 
-    public void sendInventoryUpdateList(List<InventoryUpdateDto> inventoryUpdateDtos) {
+    public void sendInventoryUpdate(InventoryUpdateDto inventoryUpdateDto) {
+        LOGGER.info(String.format("Sending InventoryUpdateDto event to topic: %s", orderTopic.name()));
 
-        LOGGER.info("Sending InventoryUpdateDto list as JSON: {}", inventoryUpdateDtos);
+        Message<InventoryUpdateDto> message = MessageBuilder
+                .withPayload(inventoryUpdateDto)
+                .setHeader(KafkaHeaders.TOPIC, orderTopic.name())
+                .build();
 
-        try {
-
-            ObjectMapper objectMapper = new ObjectMapper();
-
-            for (InventoryUpdateDto inventoryUpdateDto : inventoryUpdateDtos) {
-
-                String json = objectMapper.writeValueAsString(inventoryUpdateDto);
-
-                Message<String> message = MessageBuilder
-                        .withPayload(json)
-                        .setHeader(KafkaHeaders.TOPIC, orderTopic.name())
-                        .build();
-
-                kafkaTemplate.send(message);
-            }
-        } catch (JsonProcessingException e) {
-            LOGGER.error("Error serializing InventoryUpdateDto list", e);
-        }
+        kafkaTemplate.send(message);
     }
 }

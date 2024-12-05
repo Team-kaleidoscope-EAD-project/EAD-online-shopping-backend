@@ -1,7 +1,6 @@
 package com.kaleidoscope.order.controller;
 
 import com.kaleidoscope.order.dto.InventoryUpdateDto;
-import com.kaleidoscope.order.dto.paymentDto;
 import com.kaleidoscope.order.kafka.InventoryUpdateProducer;
 import com.kaleidoscope.order.kafka.OrderProducer;
 import com.kaleidoscope.order.service.orderService;
@@ -32,8 +31,8 @@ public class orderController {
     }
 
     @PostMapping("/publish")
-    public ResponseEntity<String> publish(@RequestBody List<InventoryUpdateDto> inventoryUpdateDto) {
-        inventoryUpdateProducer.sendInventoryUpdateList(inventoryUpdateDto);
+    public ResponseEntity<String> publish(@RequestBody InventoryUpdateDto inventoryUpdateDto) {
+        inventoryUpdateProducer.sendInventoryUpdate(inventoryUpdateDto);
         return ResponseEntity.ok("Message sent to Kafka successfully");
     
     }
@@ -41,11 +40,6 @@ public class orderController {
     public List<orderDto> getAllOrders() {
         return orderService.getOrders();
 
-    }
-
-    @GetMapping("/getorderbyuserid/{userId}")
-    public List<orderDto> getAllOrdersByUserId(@PathVariable("userId") String userId) {
-        return orderService.getOrdersByUserId(userId);
     }
 
     @PostMapping("/addorder")

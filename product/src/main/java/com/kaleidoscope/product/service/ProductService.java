@@ -12,8 +12,11 @@ import com.kaleidoscope.product.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 
@@ -140,25 +143,6 @@ public class ProductService {
                 .filter(product -> (minPrice == null || product.getPrice() >= minPrice))
                 .filter(product -> (maxPrice == null || product.getPrice() <= maxPrice))
                 .collect(Collectors.toList());
-    }
-
-    public List<Product> searchProductsByName(String name) {
-        return productRepository.findByNameContainingIgnoreCase(name);
-    }
-
-    // Get top 3 related products by name
-    public List<Product> getRelatedProducts(String name) {
-        return productRepository.findTop5ByNameContainingIgnoreCase(name);
-    }
-
-    // Method to get the latest 5 products (new arrivals)
-    public List<Product> getNewArrivals() {
-        // Fetch all products
-        List<Product> allProducts = productRepository.findAll();
-        // Reverse the list
-        Collections.reverse(allProducts);
-        // Get the first 5 products
-        return allProducts.stream().limit(5).toList();
     }
 }
 

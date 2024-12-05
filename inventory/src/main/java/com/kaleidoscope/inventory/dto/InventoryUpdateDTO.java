@@ -10,15 +10,4 @@ import lombok.NoArgsConstructor;
 public class InventoryUpdateDTO {
     private String sku;
     private int quantity;
-
-
-    // Getters and Setters
-
-    @Override
-    public String toString() {
-        return "InventoryUpdateDtoConsumer{" +
-                "productId='" + sku + '\'' +
-                ", quantity=" + quantity +
-                '}';
-    }
 }
