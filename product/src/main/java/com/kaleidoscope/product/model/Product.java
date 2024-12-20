@@ -24,6 +24,9 @@ public class Product {
 
     private List<Variant> variants;
 
+    public Product(String number, String productA, String categoryA, double v, Object o, Object o1) {
+    }
+
     @Data
     public static class Variant {
         private String color;

@@ -19,4 +19,6 @@ public class FeedbackDTO {
         private String userId;
         private Integer rating;
 
+    public FeedbackDTO(int i, String product123, String user456, String greatProduct, int i1) {
+    }
 }

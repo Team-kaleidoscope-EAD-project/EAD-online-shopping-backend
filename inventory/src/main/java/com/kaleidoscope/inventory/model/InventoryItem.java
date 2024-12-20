@@ -20,5 +20,8 @@ public class InventoryItem {
 
 
     private LocalDateTime lastRestockedAt;
+
+    public InventoryItem(String sku123, String productA, int i, double v) {
+    }
 }
 
