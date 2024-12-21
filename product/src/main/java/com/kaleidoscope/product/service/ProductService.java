@@ -80,8 +80,8 @@ public class ProductService {
             product.setDescription(updatedProduct.getDescription());
             product.setCategory(updatedProduct.getCategory());
             product.setPrice(updatedProduct.getPrice());
-
-
+            product.setBrand(updatedProduct.getBrand());
+            product.setVariants(updatedProduct.getVariants());
             product.setImageUrl(updatedProduct.getImageUrl());
 
             return productRepository.save(product);
