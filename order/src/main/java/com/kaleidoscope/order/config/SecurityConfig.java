@@ -38,7 +38,7 @@ public class SecurityConfig implements WebFluxConfigurer {
                                 .pathMatchers(HttpMethod.POST, "/api/v1/order/publish","/api/v1/order/addorder").permitAll()
                                 .pathMatchers(HttpMethod.PUT, "/api/v1/order/updateOrder").permitAll()
                                 .pathMatchers(HttpMethod.DELETE, "/api/v1/order/deleteorder/{orderId}").permitAll()
-                                .pathMatchers(HttpMethod.GET, "/api/v1/order/getallorders").hasRole("kalei_ADMIN")
+                                .pathMatchers(HttpMethod.GET, "/api/v1/order/getallorders").permitAll()
 
                                 // Order item controller
                                 .pathMatchers("/api/v1/order/getallorderitem","api/v1/order/getallorderitemsbyorderid/{orderId}").permitAll()
