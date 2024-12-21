@@ -9,6 +9,10 @@ target/
 *.iws
 *.iml
 *.ipr
+.idea/
+*.iws
+*.iml
+*.ipr
 
 ### Eclipse ###
 .apt_generated
@@ -25,6 +29,9 @@ target/
 /dist/
 /nbdist/
 /.nb-gradle/
+build/
+!*/src/main/*/build/
+!*/src/test/*/build/
 build/
 !*/src/main/*/build/
 !*/src/test/*/build/
