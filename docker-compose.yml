@@ -1,0 +1,213 @@
+services:
+  mysql:
+    image: mysql
+    container_name: mysql
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: "$DATABASE_ROOT_PASSWORD"
+      MYSQL_DATABASE: orderDb
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - app-network
+    restart: always
+
+  mongo-product:
+    container_name: mongo
+    image: mongo:4.4.14-rc0-focal
+    ports:
+      - "27018:27017"
+    restart: always
+    volumes:
+      - mongo_product_data:/data/db
+    networks:
+      - app-network
+
+  postgres-keycloak:
+    image: postgres:15
+    container_name: postgres_keycloak
+    ports:
+      - "3610:5432"
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: keycloak
+      POSTGRES_PASSWORD: keycloakpassword
+    volumes:
+      - postgres_keycloak_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+   
+  servicediscovery:
+    build:
+      context: ./servicediscovery
+    ports:
+      - "8761:8761"
+    networks:
+      - app-network
+
+  apigateway:
+    build:
+      context: ./apigateway
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://servicediscovery:8761/eureka
+      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI: http://keycloak:9090/realms/kaleidoscope-microservice-realm/protocol/openid-connect/certs
+      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSURER_URI: http://keycloak:9090/realms/kaleidoscope-microservice-realm
+    ports:
+      - "8080:8080"
+    depends_on:
+      - servicediscovery
+      - keycloak
+    networks:
+      - app-network
+
+  product:
+    build:
+      context: ./product
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://servicediscovery:8761/eureka
+      SPRING_DATA_MONGODB_HOST: mongo
+      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI: http://keycloak:9090/realms/kaleidoscope-microservice-realm/protocol/openid-connect/certs
+      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSURER_URI: http://keycloak:9090/realms/kaleidoscope-microservice-realm
+    depends_on:
+      - servicediscovery
+      - mongo-product
+      - apigateway
+      - keycloak
+    networks:
+      - app-network
+    deploy:
+      replicas: 1
+
+  order:
+    build:
+      context: ./order
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://servicediscovery:8761/eureka
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/orderDb?createDatabaseIfNotExist=true
+      SPRING_DATASOURCE_USERNAME: "$DATABASE_ROOT_USERNAME"
+      SPRING_DATASOURCE_PASSWORD: "$DATABASE_ROOT_PASSWORD"
+      SPRING_DATASOURCE_DRIVER-CLASS-NAME: com.mysql.cj.jdbc.Driver
+      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI: http://keycloak:9090/realms/kaleidoscope-microservice-realm/protocol/openid-connect/certs
+      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSURER_URI: http://keycloak:9090/realms/kaleidoscope-microservice-realm
+      SPRING_KAFKA_PRODUCER_BOOTSTRAP_SERVERS: kafka:9092
+      SPRING_KAFKA_PRODUCER_KEY_SERIALIZER: org.apache.kafka.common.serialization.StringSerializer
+      SPRING_KAFKA_PRODUCER_VALUE_SERIALIZER: org.springframework.kafka.support.serializer.JsonSerializer
+      SPRING_KAFKA_TEMPLATE_DEFAULT_TOPIC: order-default_topic
+    depends_on:
+      - servicediscovery
+      - mysql
+      - apigateway
+      - keycloak
+      - kafka
+    networks:
+      - app-network
+    deploy:
+      replicas: 1
+
+  inventory:
+    build:
+      context: ./inventory
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://servicediscovery:8761/eureka
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/inventoryDb?createDatabaseIfNotExist=true
+      SPRING_DATASOURCE_USERNAME: "$DATABASE_ROOT_USERNAME"
+      SPRING_DATASOURCE_PASSWORD: "$DATABASE_ROOT_PASSWORD"
+      SPRING_DATASOURCE_DRIVER-CLASS-NAME: com.mysql.cj.jdbc.Driver
+      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI: http://keycloak:9090/realms/kaleidoscope-microservice-realm/protocol/openid-connect/certs
+      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSURER_URI: http://keycloak:9090/realms/kaleidoscope-microservice-realm
+      SPRING_KAFKA_CONSUMER_BOOTSTRAP_SERVERS: kafka:9092
+      SPRING_KAFKA_CONSUMER_GROUP_ID: inventory
+      SPRING_KAFKA_CONSUMER_AUTO_OFFSET_RESET: earliest
+      SPRING_KAFKA_CONSUMER_KEY_DESERIALIZER: org.apache.kafka.common.serialization.StringDeserializer
+      SPRING_KAFKA_CONSUMER_VALUE_DESERIALIZER: org.springframework.kafka.support.serializer.ErrorHandlingDeserializer
+      SPRING_KAFKA_CONSUMER_PROPERTIES_SPRING_DESERIALIZER_VALUE_DELEGATE_CLASS: org.springframework.kafka.support.serializer.JsonDeserializer
+      SPRING_KAFKA_CONSUMER_PROPERTIES_SPRING_JSON_TRUSTED_PACKAGES: "*"
+      SPRING_KAFKA_TEMPLATE_DEFAULT_TOPIC: order-default_topic
+    depends_on:
+      - servicediscovery
+      - apigateway
+      - mysql
+      - keycloak
+      - kafka
+    networks:
+      - app-network
+    deploy:
+      replicas: 1
+
+  feedback:
+    build:
+      context: ./feedback
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://servicediscovery:8761/eureka
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/feedbackDb?createDatabaseIfNotExist=true
+      SPRING_DATASOURCE_USERNAME: "$DATABASE_ROOT_USERNAME"
+      SPRING_DATASOURCE_PASSWORD: "$DATABASE_ROOT_PASSWORD"
+      SPRING_DATASOURCE_DRIVER-CLASS-NAME: com.mysql.cj.jdbc.Driver
+      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI: http://keycloak:9090/realms/kaleidoscope-microservice-realm/protocol/openid-connect/certs
+      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSURER_URI: http://keycloak:9090/realms/kaleidoscope-microservice-realm
+    depends_on:
+      - servicediscovery
+      - apigateway
+      - keycloak
+      - mysql
+    networks:
+      - app-network
+    deploy:
+      replicas: 1
+
+  keycloak:
+    container_name: keycloak
+    image: quay.io/keycloak/keycloak:26.0.2
+    command: >
+      start-dev
+    environment:
+      KC_DB: postgres
+      KC_DB_URL_HOST: postgres-keycloak
+      KC_DB_URL_PORT: 5432
+      KC_DB_USERNAME: keycloak
+      KC_DB_PASSWORD: keycloakpassword
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_HTTP_PORT: 9090
+    ports:
+      - "9090:9090"
+    depends_on:
+      - postgres-keycloak
+    networks:
+      - app-network
+
+  zookeeper:
+    image: bitnami/zookeeper:3.8
+    container_name: zookeeper
+    ports:
+      - "2181:2181"
+    environment:
+      ALLOW_ANONYMOUS_LOGIN: "yes"
+    networks:
+      - app-network
+
+  kafka:
+    image: bitnami/kafka:3.8
+    container_name: kafka
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_CFG_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_CFG_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_CFG_LISTENERS: PLAINTEXT://:9092
+    depends_on:
+      - zookeeper
+    networks:
+      - app-network
+    restart: always
+
+volumes:
+  mysql_data:
+  postgres_keycloak_data:
+  mongo_product_data:
+
+networks:
+  app-network:
+    driver: bridge
